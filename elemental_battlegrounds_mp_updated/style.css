@@ -1,0 +1,326 @@
+/*
+ * Global styles for the Elemental Battlegrounds game.
+ * The UI is kept simple yet pleasing, using light backgrounds
+ * and subtle shadows to separate interactive cards. Feel free
+ * to modify colours and spacing to suit your taste.
+ */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: #f5f5f5;
+  color: #333;
+  height: 100%;
+}
+
+#app {
+  padding: 20px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Hero selection screen */
+.hero-selection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.hero-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 200px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hero-card .emoji {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.hero-card h3 {
+  margin: 0;
+  font-size: 20px;
+  text-align: center;
+}
+
+.hero-card p {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+  color: #555;
+}
+
+/* Game screen */
+.game-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.top-bar {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+}
+
+.top-bar .stats {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.top-bar .stats span {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.top-bar .actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 8px 14px;
+  background: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.button:hover:not([disabled]) {
+  background: #0056b3;
+}
+
+.button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.shop, .board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Separate the board from the shop to avoid overlapping elements and
+   position both sections lower down the page.  The board sits a bit
+   deeper on the screen to create more breathing room around the hero
+   and shop areas. */
+.shop {
+  /* Position the shop slightly lower on the page to create breathing room. */
+  margin-top: 70px;
+}
+.board {
+  /* Position the player board around the middle of the screen */
+  margin-top: 150px;
+}
+
+.unit-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 90px;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.unit-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.unit-card.selected {
+  outline: 2px solid #007bff;
+  outline-offset: 0;
+}
+
+.unit-card .emoji {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+
+/* Image used on unit cards.  Images are scaled to fit within the card and
+   maintain their aspect ratio. */
+.unit-card .unit-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: 6px;
+}
+
+.unit-card .name {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.unit-card .stats {
+  font-size: 12px;
+  color: #555;
+}
+
+/* Highlight a unit card as a drop target during drag‑and‑drop. */
+.unit-card.drag-over {
+  outline: 2px dashed #007bff;
+  outline-offset: 0;
+}
+
+.unit-card .cost {
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 4px;
+  color: #28a745;
+}
+
+/* Message log */
+.message {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  height: 150px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.message p {
+  margin: 4px 0;
+}
+
+/* Fusion animation overlay */
+.fusion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1000;
+}
+
+.fusion-overlay .fusion-emoji {
+  font-size: 80px;
+  transform: scale(0.5);
+  transition: transform 0.5s ease;
+}
+
+.fusion-overlay.active {
+  opacity: 1;
+}
+
+.fusion-overlay.active .fusion-emoji {
+  transform: scale(1.2);
+}
+
+/* Card editor panel */
+.editor-panel {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.editor-panel h3 {
+  margin-top: 0;
+}
+
+.editor-panel label {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.editor-panel input, .editor-panel select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.editor-panel .editor-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Battle screen layout */
+.battle-section {
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+.battle-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.battle-log {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.battle-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.battle-controls .button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
