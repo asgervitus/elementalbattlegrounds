@@ -26,58 +26,333 @@ class FusionBattlegrounds {
     
     initializeElements() {
         this.baseElements = {
-            'Fire': { attack: 3, health: 2, cost: 2, tier: 1 },
-            'Water': { attack: 2, health: 3, cost: 2, tier: 1 },
-            'Earth': { attack: 2, health: 4, cost: 3, tier: 1 },
-            'Air': { attack: 4, health: 1, cost: 2, tier: 1 },
-            'Steam': { attack: 3, health: 4, cost: 4, tier: 2 },
-            'Mud': { attack: 3, health: 5, cost: 4, tier: 2 },
-            'Dust': { attack: 5, health: 3, cost: 4, tier: 2 },
-            'Lava': { attack: 6, health: 3, cost: 5, tier: 2 },
-            'Plant': { attack: 4, health: 6, cost: 6, tier: 3 },
-            'Metal': { attack: 5, health: 7, cost: 7, tier: 3 },
-            'Energy': { attack: 7, health: 4, cost: 6, tier: 3 },
-            'Stone': { attack: 3, health: 9, cost: 6, tier: 3 },
-            'Life': { attack: 6, health: 8, cost: 8, tier: 4 },
-            'Lightning': { attack: 10, health: 5, cost: 8, tier: 4 },
-            'Ice': { attack: 5, health: 10, cost: 8, tier: 4 },
-            'Dragon': { attack: 12, health: 12, cost: 12, tier: 5 },
-            'Phoenix': { attack: 14, health: 10, cost: 13, tier: 5 }
+            // Tier 1 - Basic Elements
+            'Fire': { attack: 3, health: 2, cost: 2, tier: 1, emoji: '🔥' },
+            'Water': { attack: 2, health: 3, cost: 2, tier: 1, emoji: '💧' },
+            'Earth': { attack: 2, health: 4, cost: 3, tier: 1, emoji: '🌍' },
+            'Air': { attack: 4, health: 1, cost: 2, tier: 1, emoji: '💨' },
+            'Gear': { attack: 3, health: 3, cost: 3, tier: 1, emoji: '⚙️' },
+            'Chip': { attack: 4, health: 2, cost: 3, tier: 1, emoji: '💾' },
+
+            // Tier 2 - Basic Fusions
+            'Lava': { attack: 6, health: 3, cost: 4, tier: 2, emoji: '🌋' },
+            'Steam': { attack: 3, health: 4, cost: 4, tier: 2, emoji: '♨️' },
+            'Magma': { attack: 5, health: 4, cost: 4, tier: 2, emoji: '🗻' },
+            'Smoke': { attack: 4, health: 3, cost: 4, tier: 2, emoji: '💨' },
+            'Tide': { attack: 4, health: 5, cost: 4, tier: 2, emoji: '🌊' },
+            'Mud': { attack: 3, health: 5, cost: 4, tier: 2, emoji: '🟫' },
+            'Mist': { attack: 3, health: 4, cost: 4, tier: 2, emoji: '🌫️' },
+            'Stone': { attack: 3, health: 7, cost: 5, tier: 2, emoji: '🪨' },
+            'Sandstorm': { attack: 5, health: 4, cost: 5, tier: 2, emoji: '🏜️' },
+            'Gale': { attack: 6, health: 2, cost: 4, tier: 2, emoji: '🌪️' },
+            'Android': { attack: 5, health: 5, cost: 5, tier: 2, emoji: '🤖' },
+            'Automaton': { attack: 4, health: 6, cost: 5, tier: 2, emoji: '🦾' },
+            'AI Core': { attack: 7, health: 3, cost: 5, tier: 2, emoji: '🧠' },
+
+            // Tier 3 - Advanced Fusions
+            'Foundry': { attack: 8, health: 6, cost: 6, tier: 3, emoji: '🏭' },
+            'Geyser': { attack: 6, health: 7, cost: 6, tier: 3, emoji: '⛲' },
+            'Volcano': { attack: 9, health: 5, cost: 7, tier: 3, emoji: '🌋' },
+            'Pyroclastic Flow': { attack: 10, health: 4, cost: 7, tier: 3, emoji: '☄️' },
+            'Steam Engine': { attack: 7, health: 7, cost: 7, tier: 3, emoji: '🚂' },
+            'Distillery': { attack: 5, health: 8, cost: 6, tier: 3, emoji: '🥃' },
+            'Hot Spring': { attack: 4, health: 9, cost: 6, tier: 3, emoji: '♨️' },
+            'Cloud': { attack: 6, health: 6, cost: 6, tier: 3, emoji: '☁️' },
+            'Forge': { attack: 8, health: 7, cost: 7, tier: 3, emoji: '⚒️' },
+            'Geothermal Plant': { attack: 7, health: 8, cost: 8, tier: 3, emoji: '⚡' },
+            'Lava Field': { attack: 9, health: 6, cost: 8, tier: 3, emoji: '🌋' },
+            'Ash Cloud': { attack: 6, health: 7, cost: 7, tier: 3, emoji: '🌫️' },
+            'Plasma Torch': { attack: 12, health: 4, cost: 8, tier: 3, emoji: '🔥' },
+            'Thunderstorm': { attack: 8, health: 8, cost: 8, tier: 3, emoji: '⛈️' },
+            'Electromagnet': { attack: 7, health: 9, cost: 8, tier: 3, emoji: '🧲' },
+            'Static Storm': { attack: 10, health: 6, cost: 8, tier: 3, emoji: '🌩️' },
+            'Steamship': { attack: 6, health: 10, cost: 7, tier: 3, emoji: '🚢' },
+            'Ocean': { attack: 5, health: 12, cost: 7, tier: 3, emoji: '🌊' },
+            'Estuary': { attack: 7, health: 9, cost: 7, tier: 3, emoji: '🏞️' },
+            'Sea Breeze': { attack: 8, health: 7, cost: 7, tier: 3, emoji: '🌬️' },
+            'Brick Kiln': { attack: 6, health: 9, cost: 7, tier: 3, emoji: '🧱' },
+            'Clay Pottery': { attack: 5, health: 10, cost: 6, tier: 3, emoji: '🏺' },
+            'Clay': { attack: 4, health: 11, cost: 6, tier: 3, emoji: '🟫' },
+            'Dust Mound': { attack: 7, health: 8, cost: 7, tier: 3, emoji: '🏜️' },
+            'Sauna': { attack: 6, health: 8, cost: 7, tier: 3, emoji: '🧖' },
+            'Dew': { attack: 4, health: 9, cost: 6, tier: 3, emoji: '💧' },
+            'Morning Fog': { attack: 5, health: 8, cost: 6, tier: 3, emoji: '🌁' },
+            'Vapor Cloud': { attack: 6, health: 7, cost: 6, tier: 3, emoji: '🌫️' },
+            'Glass': { attack: 8, health: 6, cost: 7, tier: 3, emoji: '🔮' },
+            'Marble': { attack: 6, health: 10, cost: 7, tier: 3, emoji: '🎱' },
+            'Boulder': { attack: 5, health: 12, cost: 7, tier: 3, emoji: '🪨' },
+            'Sandstone': { attack: 7, health: 9, cost: 7, tier: 3, emoji: '🏖️' },
+            'Ember Ash': { attack: 9, health: 5, cost: 7, tier: 3, emoji: '🔥' },
+            'Silt': { attack: 4, health: 10, cost: 6, tier: 3, emoji: '🟫' },
+            'Sand': { attack: 6, health: 8, cost: 6, tier: 3, emoji: '🏖️' },
+            'Dust Devil': { attack: 8, health: 6, cost: 7, tier: 3, emoji: '🌪️' },
+            'Fire Whirl': { attack: 11, health: 5, cost: 8, tier: 3, emoji: '🌪️🔥' },
+            'Sea Spray': { attack: 7, health: 7, cost: 7, tier: 3, emoji: '💦' },
+            'Dust Storm': { attack: 9, health: 6, cost: 8, tier: 3, emoji: '🌪️💨' },
+            'Tornado': { attack: 12, health: 4, cost: 8, tier: 3, emoji: '🌪️' },
+            'Robot Arm': { attack: 8, health: 8, cost: 8, tier: 3, emoji: '🦾' },
+            'Drone': { attack: 9, health: 6, cost: 8, tier: 3, emoji: '🚁' },
+            'Gearbox': { attack: 7, health: 9, cost: 8, tier: 3, emoji: '⚙️' },
+            'Smartwatch': { attack: 6, health: 8, cost: 7, tier: 3, emoji: '⌚' },
+            'Mechatronics': { attack: 10, health: 7, cost: 9, tier: 3, emoji: '🤖⚙️' },
+            'Microprocessor': { attack: 11, health: 5, cost: 8, tier: 3, emoji: '💻' },
+
+            // Tier 4 - Master Fusions
+            'Inferno': { attack: 15, health: 8, cost: 10, tier: 4, emoji: '🔥🌋' },
+            'Tsunami': { attack: 12, health: 12, cost: 10, tier: 4, emoji: '🌊🌪️' },
+            'Earthquake': { attack: 10, health: 15, cost: 10, tier: 4, emoji: '🌍💥' },
+            'Hurricane': { attack: 14, health: 9, cost: 10, tier: 4, emoji: '🌪️⛈️' },
+            'Cybernetics': { attack: 13, health: 11, cost: 11, tier: 4, emoji: '🤖🧠' },
+            'Quantum Core': { attack: 16, health: 7, cost: 11, tier: 4, emoji: '⚛️💎' },
+            'Plasma Storm': { attack: 18, health: 6, cost: 12, tier: 4, emoji: '⚡🌩️' },
+            'Tidal Wave': { attack: 14, health: 10, cost: 11, tier: 4, emoji: '🌊💥' },
+            'Molten Core': { attack: 16, health: 9, cost: 12, tier: 4, emoji: '🌋🔥' },
+            'Lightning Storm': { attack: 17, health: 7, cost: 12, tier: 4, emoji: '⚡⛈️' },
+            'Crystal Formation': { attack: 11, health: 14, cost: 11, tier: 4, emoji: '💎🔮' },
+            'Mechanical Beast': { attack: 15, health: 10, cost: 12, tier: 4, emoji: '🤖🦾' },
+
+            // Tier 5 - Legendary Fusions
+            'Phoenix': { attack: 20, health: 12, cost: 15, tier: 5, emoji: '🔥🦅' },
+            'Leviathan': { attack: 18, health: 15, cost: 15, tier: 5, emoji: '🌊🐉' },
+            'Titan': { attack: 16, health: 18, cost: 15, tier: 5, emoji: '🌍⛰️' },
+            'Tempest Lord': { attack: 22, health: 10, cost: 16, tier: 5, emoji: '🌪️👑' },
+            'Cyber Dragon': { attack: 19, health: 14, cost: 16, tier: 5, emoji: '🤖🐉' },
+            'Quantum Beast': { attack: 24, health: 8, cost: 17, tier: 5, emoji: '⚛️🦾' },
+            'Elemental Avatar': { attack: 20, health: 15, cost: 17, tier: 5, emoji: '🌟👤' },
+            'Storm King': { attack: 23, health: 11, cost: 17, tier: 5, emoji: '⚡👑' },
+
+            // Tier 6 - Ultimate Fusions
+            'Primordial Force': { attack: 30, health: 20, cost: 25, tier: 6, emoji: '🌌💫' },
+            'World Ender': { attack: 35, health: 15, cost: 25, tier: 6, emoji: '💀🌍' },
+            'Genesis Core': { attack: 25, health: 25, cost: 25, tier: 6, emoji: '⭐🌟' },
+            'Omega Protocol': { attack: 40, health: 10, cost: 25, tier: 6, emoji: '🤖👑' },
+            'Cosmic Entity': { attack: 32, health: 18, cost: 25, tier: 6, emoji: '🌌👁️' },
+            'Reality Shaper': { attack: 28, health: 22, cost: 25, tier: 6, emoji: '🔮🌟' }
         };
         
         this.fusionRecipes = {
             // Tier 1 + Tier 1 = Tier 2
+            'Fire + Fire': 'Lava',
             'Fire + Water': 'Steam',
             'Water + Fire': 'Steam',
-            'Earth + Water': 'Mud',
+            'Fire + Earth': 'Magma',
+            'Earth + Fire': 'Magma',
+            'Fire + Air': 'Smoke',
+            'Air + Fire': 'Smoke',
+            'Fire + Gear': 'Forge',
+            'Gear + Fire': 'Forge',
+            'Fire + Chip': 'Plasma Torch',
+            'Chip + Fire': 'Plasma Torch',
+
+            'Water + Water': 'Tide',
             'Water + Earth': 'Mud',
-            'Earth + Air': 'Dust',
-            'Air + Earth': 'Dust',
-            'Fire + Earth': 'Lava',
-            'Earth + Fire': 'Lava',
+            'Earth + Water': 'Mud',
+            'Water + Air': 'Mist',
+            'Air + Water': 'Mist',
+            'Water + Gear': 'Steam Engine',
+            'Gear + Water': 'Steam Engine',
+            'Water + Chip': 'Distillery',
+            'Chip + Water': 'Distillery',
+
+            'Earth + Earth': 'Stone',
+            'Earth + Air': 'Sandstorm',
+            'Air + Earth': 'Sandstorm',
+            'Earth + Gear': 'Boulder',
+            'Gear + Earth': 'Boulder',
+            'Earth + Chip': 'Clay',
+            'Chip + Earth': 'Clay',
+
+            'Air + Air': 'Gale',
+            'Air + Gear': 'Drone',
+            'Gear + Air': 'Drone',
+            'Air + Chip': 'Static Storm',
+            'Chip + Air': 'Static Storm',
+
+            'Gear + Gear': 'Android',
+            'Gear + Chip': 'Automaton',
+            'Chip + Gear': 'Automaton',
+            'Chip + Chip': 'AI Core',
 
             // Tier 2 + Tier 1 = Tier 3
-            'Water + Steam': 'Plant',
-            'Steam + Water': 'Plant',
-            'Earth + Lava': 'Metal',
-            'Lava + Earth': 'Metal',
-            'Fire + Air': 'Energy',
-            'Air + Fire': 'Energy',
-            'Earth + Earth': 'Stone',
+            'Lava + Fire': 'Foundry',
+            'Fire + Lava': 'Foundry',
+            'Lava + Water': 'Geyser',
+            'Water + Lava': 'Geyser',
+            'Lava + Earth': 'Volcano',
+            'Earth + Lava': 'Volcano',
+            'Lava + Air': 'Pyroclastic Flow',
+            'Air + Lava': 'Pyroclastic Flow',
+            'Lava + Gear': 'Lava Field',
+            'Gear + Lava': 'Lava Field',
+            'Lava + Chip': 'Geothermal Plant',
+            'Chip + Lava': 'Geothermal Plant',
 
-            // Tier 3 + Tier 1/2 = Tier 4
-            'Water + Plant': 'Life',
-            'Plant + Water': 'Life',
-            'Energy + Air': 'Lightning',
-            'Air + Energy': 'Lightning',
-            'Water + Air': 'Ice',
-            'Air + Water': 'Ice',
+            'Steam + Fire': 'Steam Engine',
+            'Fire + Steam': 'Steam Engine',
+            'Steam + Water': 'Distillery',
+            'Water + Steam': 'Distillery',
+            'Steam + Earth': 'Hot Spring',
+            'Earth + Steam': 'Hot Spring',
+            'Steam + Air': 'Cloud',
+            'Air + Steam': 'Cloud',
+            'Steam + Gear': 'Steamship',
+            'Gear + Steam': 'Steamship',
+            'Steam + Chip': 'Sauna',
+            'Chip + Steam': 'Sauna',
 
-            // Tier 4 + Tier 1 = Tier 5
-            'Fire + Life': 'Phoenix',
-            'Life + Fire': 'Phoenix',
-            'Lightning + Fire': 'Dragon',
-            'Fire + Lightning': 'Dragon'
+            'Magma + Fire': 'Forge',
+            'Fire + Magma': 'Forge',
+            'Magma + Water': 'Geothermal Plant',
+            'Water + Magma': 'Geothermal Plant',
+            'Magma + Earth': 'Lava Field',
+            'Earth + Magma': 'Lava Field',
+            'Magma + Air': 'Ash Cloud',
+            'Air + Magma': 'Ash Cloud',
+            'Magma + Gear': 'Foundry',
+            'Gear + Magma': 'Foundry',
+            'Magma + Chip': 'Glass',
+            'Chip + Magma': 'Glass',
+
+            'Smoke + Fire': 'Ember Ash',
+            'Fire + Smoke': 'Ember Ash',
+            'Smoke + Water': 'Vapor Cloud',
+            'Water + Smoke': 'Vapor Cloud',
+            'Smoke + Earth': 'Dust Mound',
+            'Earth + Smoke': 'Dust Mound',
+            'Smoke + Air': 'Ash Cloud',
+            'Air + Smoke': 'Ash Cloud',
+            'Smoke + Gear': 'Steam Engine',
+            'Gear + Smoke': 'Steam Engine',
+            'Smoke + Chip': 'Microprocessor',
+            'Chip + Smoke': 'Microprocessor',
+
+            'Tide + Fire': 'Steamship',
+            'Fire + Tide': 'Steamship',
+            'Tide + Water': 'Ocean',
+            'Water + Tide': 'Ocean',
+            'Tide + Earth': 'Estuary',
+            'Earth + Tide': 'Estuary',
+            'Tide + Air': 'Sea Breeze',
+            'Air + Tide': 'Sea Breeze',
+            'Tide + Gear': 'Sea Spray',
+            'Gear + Tide': 'Sea Spray',
+            'Tide + Chip': 'Thunderstorm',
+            'Chip + Tide': 'Thunderstorm',
+
+            'Mud + Fire': 'Brick Kiln',
+            'Fire + Mud': 'Brick Kiln',
+            'Mud + Water': 'Clay Pottery',
+            'Water + Mud': 'Clay Pottery',
+            'Mud + Earth': 'Clay',
+            'Earth + Mud': 'Clay',
+            'Mud + Air': 'Dust Mound',
+            'Air + Mud': 'Dust Mound',
+            'Mud + Gear': 'Silt',
+            'Gear + Mud': 'Silt',
+            'Mud + Chip': 'Sand',
+            'Chip + Mud': 'Sand',
+
+            // Continue with remaining Tier 2 + Tier 1 combinations
+            'Mist + Fire': 'Sauna',
+            'Fire + Mist': 'Sauna',
+            'Mist + Water': 'Dew',
+            'Water + Mist': 'Dew',
+            'Mist + Earth': 'Morning Fog',
+            'Earth + Mist': 'Morning Fog',
+            'Mist + Air': 'Vapor Cloud',
+            'Air + Mist': 'Vapor Cloud',
+
+            'Stone + Fire': 'Glass',
+            'Fire + Stone': 'Glass',
+            'Stone + Water': 'Marble',
+            'Water + Stone': 'Marble',
+            'Stone + Earth': 'Boulder',
+            'Earth + Stone': 'Boulder',
+            'Stone + Air': 'Sandstone',
+            'Air + Stone': 'Sandstone',
+
+            'Sandstorm + Fire': 'Fire Whirl',
+            'Fire + Sandstorm': 'Fire Whirl',
+            'Sandstorm + Water': 'Dust Storm',
+            'Water + Sandstorm': 'Dust Storm',
+            'Sandstorm + Earth': 'Dust Devil',
+            'Earth + Sandstorm': 'Dust Devil',
+            'Sandstorm + Air': 'Tornado',
+            'Air + Sandstorm': 'Tornado',
+
+            'Gale + Fire': 'Fire Whirl',
+            'Fire + Gale': 'Fire Whirl',
+            'Gale + Water': 'Sea Spray',
+            'Water + Gale': 'Sea Spray',
+            'Gale + Earth': 'Dust Storm',
+            'Earth + Gale': 'Dust Storm',
+            'Gale + Air': 'Tornado',
+            'Air + Gale': 'Tornado',
+
+            'Android + Gear': 'Robot Arm',
+            'Gear + Android': 'Robot Arm',
+            'Android + Chip': 'Drone',
+            'Chip + Android': 'Drone',
+
+            'Automaton + Gear': 'Gearbox',
+            'Gear + Automaton': 'Gearbox',
+            'Automaton + Chip': 'Smartwatch',
+            'Chip + Automaton': 'Smartwatch',
+
+            'AI Core + Gear': 'Mechatronics',
+            'Gear + AI Core': 'Mechatronics',
+            'AI Core + Chip': 'Microprocessor',
+            'Chip + AI Core': 'Microprocessor',
+
+            // Tier 2 + Tier 2 = Tier 4 (Skip Tier 3 for more powerful combinations)
+            'Lava + Steam': 'Inferno',
+            'Steam + Lava': 'Inferno',
+            'Lava + Magma': 'Molten Core',
+            'Magma + Lava': 'Molten Core',
+            'Tide + Gale': 'Hurricane',
+            'Gale + Tide': 'Hurricane',
+            'Stone + Sandstorm': 'Earthquake',
+            'Sandstorm + Stone': 'Earthquake',
+            'Android + AI Core': 'Cybernetics',
+            'AI Core + Android': 'Cybernetics',
+            'Automaton + AI Core': 'Quantum Core',
+            'AI Core + Automaton': 'Quantum Core',
+
+            // Tier 3 + Tier 3 = Tier 5
+            'Volcano + Thunderstorm': 'Phoenix',
+            'Thunderstorm + Volcano': 'Phoenix',
+            'Ocean + Tornado': 'Leviathan',
+            'Tornado + Ocean': 'Leviathan',
+            'Boulder + Earthquake': 'Titan',
+            'Earthquake + Boulder': 'Titan',
+            'Plasma Torch + Static Storm': 'Tempest Lord',
+            'Static Storm + Plasma Torch': 'Tempest Lord',
+            'Mechatronics + Microprocessor': 'Cyber Dragon',
+            'Microprocessor + Mechatronics': 'Cyber Dragon',
+            'Forge + Geothermal Plant': 'Quantum Beast',
+            'Geothermal Plant + Forge': 'Quantum Beast',
+
+            // Tier 4 + Tier 4 = Tier 5
+            'Inferno + Hurricane': 'Elemental Avatar',
+            'Hurricane + Inferno': 'Elemental Avatar',
+            'Molten Core + Lightning Storm': 'Storm King',
+            'Lightning Storm + Molten Core': 'Storm King',
+
+            // Tier 5 + Tier 5 = Tier 6 (Ultimate Fusions)
+            'Phoenix + Leviathan': 'Primordial Force',
+            'Leviathan + Phoenix': 'Primordial Force',
+            'Titan + Tempest Lord': 'World Ender',
+            'Tempest Lord + Titan': 'World Ender',
+            'Cyber Dragon + Quantum Beast': 'Genesis Core',
+            'Quantum Beast + Cyber Dragon': 'Genesis Core',
+            'Elemental Avatar + Storm King': 'Omega Protocol',
+            'Storm King + Elemental Avatar': 'Omega Protocol',
+
+            // Special Tier 6 combinations
+            'Primordial Force + World Ender': 'Cosmic Entity',
+            'World Ender + Primordial Force': 'Cosmic Entity',
+            'Genesis Core + Omega Protocol': 'Reality Shaper',
+            'Omega Protocol + Genesis Core': 'Reality Shaper'
         };
     }
     
@@ -172,13 +447,15 @@ class FusionBattlegrounds {
     
     generateShop() {
         this.shop = [];
-        this.shopTier = Math.min(5, Math.floor((this.turn - 1) / 3) + 1);
-        
-        const availableElements = Object.keys(this.baseElements).filter(name => 
+        // Tier progression: 1-2 turns = tier 1, 3-5 = tier 2, 6-8 = tier 3, 9-12 = tier 4, 13-16 = tier 5, 17+ = tier 6
+        this.shopTier = Math.min(6, Math.floor((this.turn - 1) / 2.5) + 1);
+
+        const availableElements = Object.keys(this.baseElements).filter(name =>
             this.baseElements[name].tier <= this.shopTier
         );
-        
-        for (let i = 0; i < 5; i++) {
+
+        // Generate 6 shop slots for more variety
+        for (let i = 0; i < 6; i++) {
             const randomElement = availableElements[Math.floor(Math.random() * availableElements.length)];
             this.shop.push(this.createElement(randomElement));
         }
@@ -251,7 +528,9 @@ class FusionBattlegrounds {
             const preview = document.getElementById('fusion-preview');
             
             if (result) {
-                preview.innerHTML = `<i class="fas fa-star"></i><span>${result}</span>`;
+                const resultData = this.baseElements[result];
+                const emoji = resultData ? resultData.emoji : '⭐';
+                preview.innerHTML = `<span class="fusion-emoji">${emoji}</span><span>${result}</span>`;
                 preview.classList.add('known');
             } else {
                 preview.innerHTML = `<i class="fas fa-question"></i><span>Unknown</span>`;
@@ -418,9 +697,13 @@ class FusionBattlegrounds {
         card.draggable = true;
         card.dataset.elementId = element.id;
         
+        const elementData = this.baseElements[element.name];
+        const emoji = elementData ? elementData.emoji : '❓';
+
         card.innerHTML = `
             <div class="element-cost">${element.cost}</div>
-            <div class="element-tier">${element.tier}</div>
+            <div class="element-tier">T${element.tier}</div>
+            <div class="element-emoji">${emoji}</div>
             <div class="element-name">${element.name}</div>
             <div class="element-stats">
                 <div class="element-attack">${element.attack} ATK</div>
