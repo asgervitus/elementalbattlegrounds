@@ -522,10 +522,17 @@ class FusionBattlegrounds {
         const filledSlots = this.alchemySlots.filter(slot => slot !== null).length;
         const flaskLiquid = document.getElementById('flask-liquid');
         const alchemyCount = document.getElementById('alchemy-count');
+        const progressFill = document.getElementById('alchemy-progress');
 
         if (flaskLiquid && alchemyCount) {
-            // Update counter
+            // Update counter with animation
             alchemyCount.textContent = filledSlots;
+
+            // Update progress bar
+            if (progressFill) {
+                const progressPercent = (filledSlots / 5) * 100;
+                progressFill.style.width = `${progressPercent}%`;
+            }
 
             // Update liquid level (20% per element)
             const liquidHeight = (filledSlots / 5) * 100;
@@ -534,6 +541,24 @@ class FusionBattlegrounds {
             // Update liquid color based on elements
             const liquidColor = this.getAlchemyColor();
             flaskLiquid.style.background = liquidColor;
+
+            // Add visual feedback for progress
+            if (filledSlots > 0) {
+                flaskLiquid.style.boxShadow = `
+                    0 0 ${10 + filledSlots * 4}px rgba(155, 89, 182, ${0.3 + filledSlots * 0.1}),
+                    inset 0 2px 10px rgba(255, 255, 255, 0.2)
+                `;
+            }
+
+            // Trigger apparatus glow when full
+            const apparatus = document.querySelector('.alchemy-apparatus');
+            if (apparatus) {
+                if (filledSlots === 5) {
+                    apparatus.classList.add('apparatus-ready');
+                } else {
+                    apparatus.classList.remove('apparatus-ready');
+                }
+            }
         }
     }
 
@@ -593,22 +618,91 @@ class FusionBattlegrounds {
             return;
         }
 
+        // Add extraction animation
+        this.playExtractionAnimation();
+
         // Determine tier 5 result based on input elements
         const result = this.determineAlchemyResult();
         const newElement = this.createElement(result);
 
-        this.board.push(newElement);
+        // Add to board with special effect
+        setTimeout(() => {
+            this.board.push(newElement);
 
-        // Clear alchemy slots
-        this.alchemySlots = [null, null, null, null, null];
-        this.alchemyElements = [];
+            // Clear alchemy slots
+            this.alchemySlots = [null, null, null, null, null];
+            this.alchemyElements = [];
 
-        this.updateDisplay();
-        this.updateAlchemyApparatus();
-        this.checkAlchemyReady();
-        this.playSound('fusion');
-        this.log(`Alchemy complete! Created ${result}!`);
-        this.showNotification(`Alchemy Success: ${result}!`, 'success');
+            this.updateDisplay();
+            this.updateAlchemyApparatus();
+            this.checkAlchemyReady();
+            this.playSound('fusion');
+            this.log(`🧬 Alchemy extraction complete! Created legendary ${result}!`);
+            this.showNotification(`🧬 Legendary Created: ${result}!`, 'success');
+
+            // Add special particle effect
+            this.createAlchemyParticles();
+        }, 1500);
+    }
+
+    playExtractionAnimation() {
+        const extractBtn = document.getElementById('extract-btn');
+        const apparatus = document.querySelector('.alchemy-apparatus');
+
+        if (extractBtn) {
+            extractBtn.disabled = true;
+            extractBtn.textContent = '🧬 EXTRACTING...';
+            extractBtn.style.animation = 'extracting 1.5s ease-in-out';
+        }
+
+        if (apparatus) {
+            apparatus.style.animation = 'extraction 1.5s ease-in-out';
+        }
+
+        // Reset after animation
+        setTimeout(() => {
+            if (extractBtn) {
+                extractBtn.textContent = '🧬 EXTRACT ESSENCE';
+                extractBtn.style.animation = '';
+            }
+            if (apparatus) {
+                apparatus.style.animation = '';
+            }
+        }, 1500);
+    }
+
+    createAlchemyParticles() {
+        // Create visual particle burst effect
+        const apparatus = document.querySelector('.alchemy-apparatus');
+        if (!apparatus) return;
+
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'alchemy-particle';
+            particle.style.cssText = `
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                background: radial-gradient(circle, #9b59b6, #e1bee7);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000;
+                animation: particleBurst 2s ease-out forwards;
+                animation-delay: ${i * 0.1}s;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            `;
+
+            apparatus.appendChild(particle);
+
+            // Remove particle after animation
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 2000 + i * 100);
+        }
     }
 
     determineAlchemyResult() {
