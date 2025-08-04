@@ -8,6 +8,8 @@ class FusionBattlegrounds {
         this.board = [];  // Only board, no hand
         this.shop = [];
         this.fusionSlots = [null, null];
+        this.alchemySlots = [null, null, null, null, null]; // 5 alchemy slots
+        this.alchemyElements = []; // Track element types for coloring
         this.shopTier = 1;
 
         this.initializeElements();
@@ -353,6 +355,7 @@ class FusionBattlegrounds {
         document.getElementById('fuse-btn').addEventListener('click', () => this.fuseElements());
         document.getElementById('clear-fusion-btn').addEventListener('click', () => this.clearFusion());
         document.getElementById('clear-log-btn').addEventListener('click', () => this.clearLog());
+        document.getElementById('extract-btn').addEventListener('click', () => this.extractAlchemyResult());
         document.getElementById('close-tutorial').addEventListener('click', () => this.hideTutorial());
         document.getElementById('close-settings').addEventListener('click', () => this.hideSettings());
         document.getElementById('continue-btn').addEventListener('click', () => this.continueToBattle());
@@ -413,6 +416,9 @@ class FusionBattlegrounds {
 
         // Set up board drop zone
         this.setupBoardDropZone();
+
+        // Set up alchemy slots
+        this.setupAlchemySlots();
     }
 
     setupFusionSlots() {
@@ -463,6 +469,160 @@ class FusionBattlegrounds {
         if (element && this.gold >= element.cost && this.board.length < 7) {
             this.buyElement(elementId);
         }
+    }
+
+    setupAlchemySlots() {
+        const alchemySlots = document.querySelectorAll('.alchemy-slot');
+        alchemySlots.forEach((slot, index) => {
+            slot.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                slot.classList.add('drag-over');
+            });
+
+            slot.addEventListener('dragleave', () => {
+                slot.classList.remove('drag-over');
+            });
+
+            slot.addEventListener('drop', (e) => {
+                e.preventDefault();
+                slot.classList.remove('drag-over');
+                const elementId = e.dataTransfer.getData('text/plain');
+                this.addToAlchemySlot(elementId, index);
+            });
+        });
+    }
+
+    addToAlchemySlot(elementId, slotIndex) {
+        const element = this.board.find(e => e.id == elementId);
+
+        if (element && !this.alchemySlots[slotIndex]) {
+            // Create a drained version of the element
+            const drainedElement = {
+                ...element,
+                attack: 0,
+                health: 0,
+                isDrained: true
+            };
+
+            this.alchemySlots[slotIndex] = drainedElement;
+            this.alchemyElements.push(element.name);
+
+            // Remove from board
+            this.board = this.board.filter(e => e.id != elementId);
+
+            this.updateDisplay();
+            this.updateAlchemyApparatus();
+            this.checkAlchemyReady();
+            this.playSound('click');
+            this.log(`Added ${element.name} to alchemy lab (stats drained)`);
+        }
+    }
+
+    updateAlchemyApparatus() {
+        const filledSlots = this.alchemySlots.filter(slot => slot !== null).length;
+        const flaskLiquid = document.getElementById('flask-liquid');
+        const alchemyCount = document.getElementById('alchemy-count');
+
+        if (flaskLiquid && alchemyCount) {
+            // Update counter
+            alchemyCount.textContent = filledSlots;
+
+            // Update liquid level (20% per element)
+            const liquidHeight = (filledSlots / 5) * 100;
+            flaskLiquid.style.height = `${liquidHeight}%`;
+
+            // Update liquid color based on elements
+            const liquidColor = this.getAlchemyColor();
+            flaskLiquid.style.background = liquidColor;
+        }
+    }
+
+    getAlchemyColor() {
+        if (this.alchemyElements.length === 0) {
+            return 'linear-gradient(45deg, #4ecdc4, #44a08d)';
+        }
+
+        // Color based on dominant element types
+        const elementTypes = {
+            fire: ['Fire', 'Lava', 'Magma', 'Smoke', 'Foundry', 'Forge', 'Ember Ash', 'Fire Whirl', 'Inferno', 'Molten Core', 'Plasma Torch', 'Phoenix'],
+            water: ['Water', 'Steam', 'Tide', 'Mud', 'Mist', 'Geyser', 'Steam Engine', 'Distillery', 'Hot Spring', 'Cloud', 'Steamship', 'Ocean', 'Leviathan'],
+            earth: ['Earth', 'Stone', 'Sandstorm', 'Volcano', 'Boulder', 'Clay', 'Glass', 'Marble', 'Sand', 'Earthquake', 'Titan'],
+            air: ['Air', 'Gale', 'Tornado', 'Hurricane', 'Tempest Lord'],
+            tech: ['Gear', 'Chip', 'Android', 'Automaton', 'AI Core', 'Drone', 'Cybernetics', 'Cyber Dragon', 'Omega Protocol'],
+            energy: ['Lightning Storm', 'Static Storm', 'Thunderstorm', 'Storm King']
+        };
+
+        const typeCounts = { fire: 0, water: 0, earth: 0, air: 0, tech: 0, energy: 0 };
+
+        this.alchemyElements.forEach(elementName => {
+            for (const [type, elements] of Object.entries(elementTypes)) {
+                if (elements.includes(elementName)) {
+                    typeCounts[type]++;
+                    break;
+                }
+            }
+        });
+
+        const dominantType = Object.keys(typeCounts).reduce((a, b) =>
+            typeCounts[a] > typeCounts[b] ? a : b
+        );
+
+        const colors = {
+            fire: 'linear-gradient(45deg, #ff6b6b, #ee5a24)',
+            water: 'linear-gradient(45deg, #4ecdc4, #44a08d)',
+            earth: 'linear-gradient(45deg, #8b4513, #a0522d)',
+            air: 'linear-gradient(45deg, #87ceeb, #4682b4)',
+            tech: 'linear-gradient(45deg, #9b59b6, #8e44ad)',
+            energy: 'linear-gradient(45deg, #ffd700, #ffed4e)'
+        };
+
+        return colors[dominantType] || 'linear-gradient(45deg, #4ecdc4, #44a08d)';
+    }
+
+    checkAlchemyReady() {
+        const filledSlots = this.alchemySlots.filter(slot => slot !== null).length;
+        const extractBtn = document.getElementById('extract-btn');
+
+        if (extractBtn) {
+            extractBtn.disabled = filledSlots < 5;
+        }
+    }
+
+    extractAlchemyResult() {
+        if (this.alchemySlots.filter(slot => slot !== null).length < 5) {
+            return;
+        }
+
+        // Determine tier 5 result based on input elements
+        const result = this.determineAlchemyResult();
+        const newElement = this.createElement(result);
+
+        this.board.push(newElement);
+
+        // Clear alchemy slots
+        this.alchemySlots = [null, null, null, null, null];
+        this.alchemyElements = [];
+
+        this.updateDisplay();
+        this.updateAlchemyApparatus();
+        this.checkAlchemyReady();
+        this.playSound('fusion');
+        this.log(`Alchemy complete! Created ${result}!`);
+        this.showNotification(`Alchemy Success: ${result}!`, 'success');
+    }
+
+    determineAlchemyResult() {
+        // Get all tier 5 elements
+        const tier5Elements = Object.keys(this.baseElements).filter(name =>
+            this.baseElements[name].tier === 5
+        );
+
+        if (tier5Elements.length === 0) {
+            return 'Phoenix'; // Fallback
+        }
+
+        // Use the same type-based logic as fusion
+        return this.selectBestFusionResult('', '', tier5Elements);
     }
     
     generateShop() {
@@ -592,7 +752,27 @@ class FusionBattlegrounds {
     }
     
     endTurn() {
+        // Clear drained elements from alchemy
+        this.clearDrainedElements();
+
         this.showBattleScreen();
+    }
+
+    clearDrainedElements() {
+        // Remove any drained elements that are still on the board
+        this.board = this.board.filter(element => !element.isDrained);
+
+        // Clear alchemy slots
+        this.alchemySlots = [null, null, null, null, null];
+        this.alchemyElements = [];
+
+        this.updateDisplay();
+        this.updateAlchemyApparatus();
+        this.checkAlchemyReady();
+
+        if (this.alchemyElements.length > 0) {
+            this.log('Alchemy elements cleared at turn end');
+        }
     }
     
     showBattleScreen() {
@@ -695,6 +875,8 @@ class FusionBattlegrounds {
         this.board = [];
         this.shop = [];
         this.fusionSlots = [null, null];
+        this.alchemySlots = [null, null, null, null, null];
+        this.alchemyElements = [];
         this.clearLog();
     }
     
@@ -807,6 +989,20 @@ class FusionBattlegrounds {
                 slot.classList.add('filled');
             } else {
                 slot.innerHTML = `<div class="slot-placeholder">Drop Element</div>`;
+                slot.classList.remove('filled');
+            }
+        });
+
+        // Update alchemy slots
+        document.querySelectorAll('.alchemy-slot').forEach((slot, index) => {
+            if (this.alchemySlots[index]) {
+                const element = this.alchemySlots[index];
+                const elementData = this.baseElements[element.name];
+                const emoji = elementData ? elementData.emoji : '❓';
+                slot.innerHTML = `<div class="slot-emoji">${emoji}</div>`;
+                slot.classList.add('filled');
+            } else {
+                slot.innerHTML = `<div class="slot-number">${index + 1}</div>`;
                 slot.classList.remove('filled');
             }
         });

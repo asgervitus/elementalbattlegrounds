@@ -113,8 +113,58 @@
                     </div>
                 </div>
 
+                <!-- Alchemy Laboratory -->
+                <div id="alchemy-section" class="game-panel">
+                    <div class="panel-header">
+                        <h3>⚗️ Alchemy Laboratory</h3>
+                        <div class="alchemy-counter">
+                            <span id="alchemy-count">0</span>/5
+                        </div>
+                    </div>
+                    <div id="alchemy-area">
+                        <div class="alchemy-apparatus">
+                            <div class="alchemy-flask">
+                                <div class="flask-liquid" id="flask-liquid"></div>
+                                <div class="flask-bubbles">
+                                    <div class="bubble"></div>
+                                    <div class="bubble"></div>
+                                    <div class="bubble"></div>
+                                </div>
+                            </div>
+                            <div class="alchemy-tubes">
+                                <div class="tube tube-1"></div>
+                                <div class="tube tube-2"></div>
+                                <div class="tube tube-3"></div>
+                            </div>
+                            <div class="alchemy-base">
+                                <div class="base-flame"></div>
+                            </div>
+                        </div>
+                        <div class="alchemy-slots">
+                            <div class="alchemy-slot" data-slot="0">
+                                <div class="slot-number">1</div>
+                            </div>
+                            <div class="alchemy-slot" data-slot="1">
+                                <div class="slot-number">2</div>
+                            </div>
+                            <div class="alchemy-slot" data-slot="2">
+                                <div class="slot-number">3</div>
+                            </div>
+                            <div class="alchemy-slot" data-slot="3">
+                                <div class="slot-number">4</div>
+                            </div>
+                            <div class="alchemy-slot" data-slot="4">
+                                <div class="slot-number">5</div>
+                            </div>
+                        </div>
+                        <button id="extract-btn" class="extract-btn" disabled>
+                            🧬 Extract Essence
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Battle Log -->
-                <div id="log-section" class="game-panel">
+                <div id="log-section" class="game-panel log-panel">
                     <div class="panel-header">
                         <h3>📜 Battle Log</h3>
                         <button id="clear-log-btn" class="clear-btn">🗑️</button>
