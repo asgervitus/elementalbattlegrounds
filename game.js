@@ -129,232 +129,221 @@ class FusionBattlegrounds {
             'Reality Shaper': { attack: 28, health: 22, cost: 3, tier: 6, emoji: '🔮🌟' }
         };
         
-        this.fusionRecipes = {
-            // Tier 1 + Tier 1 = Tier 2
-            'Fire + Fire': 'Lava',
-            'Fire + Water': 'Steam',
-            'Water + Fire': 'Steam',
-            'Fire + Earth': 'Magma',
-            'Earth + Fire': 'Magma',
-            'Fire + Air': 'Smoke',
-            'Air + Fire': 'Smoke',
-            'Fire + Gear': 'Forge',
-            'Gear + Fire': 'Forge',
-            'Fire + Chip': 'Plasma Torch',
-            'Chip + Fire': 'Plasma Torch',
+        // Generate complete fusion matrix - every element can fuse with every other element
+        this.fusionRecipes = {};
+        this.generateCompleteFusionMatrix();
 
-            'Water + Water': 'Tide',
-            'Water + Earth': 'Mud',
-            'Earth + Water': 'Mud',
-            'Water + Air': 'Mist',
-            'Air + Water': 'Mist',
-            'Water + Gear': 'Steam Engine',
-            'Gear + Water': 'Steam Engine',
-            'Water + Chip': 'Distillery',
-            'Chip + Water': 'Distillery',
-
-            'Earth + Earth': 'Stone',
-            'Earth + Air': 'Sandstorm',
-            'Air + Earth': 'Sandstorm',
-            'Earth + Gear': 'Boulder',
-            'Gear + Earth': 'Boulder',
-            'Earth + Chip': 'Clay',
-            'Chip + Earth': 'Clay',
-
-            'Air + Air': 'Gale',
-            'Air + Gear': 'Drone',
-            'Gear + Air': 'Drone',
-            'Air + Chip': 'Static Storm',
-            'Chip + Air': 'Static Storm',
-
-            'Gear + Gear': 'Android',
-            'Gear + Chip': 'Automaton',
-            'Chip + Gear': 'Automaton',
-            'Chip + Chip': 'AI Core',
-
-            // Tier 2 + Tier 1 = Tier 3
-            'Lava + Fire': 'Foundry',
-            'Fire + Lava': 'Foundry',
-            'Lava + Water': 'Geyser',
-            'Water + Lava': 'Geyser',
-            'Lava + Earth': 'Volcano',
-            'Earth + Lava': 'Volcano',
-            'Lava + Air': 'Pyroclastic Flow',
-            'Air + Lava': 'Pyroclastic Flow',
-            'Lava + Gear': 'Lava Field',
-            'Gear + Lava': 'Lava Field',
-            'Lava + Chip': 'Geothermal Plant',
-            'Chip + Lava': 'Geothermal Plant',
-
-            'Steam + Fire': 'Steam Engine',
-            'Fire + Steam': 'Steam Engine',
-            'Steam + Water': 'Distillery',
-            'Water + Steam': 'Distillery',
-            'Steam + Earth': 'Hot Spring',
-            'Earth + Steam': 'Hot Spring',
-            'Steam + Air': 'Cloud',
-            'Air + Steam': 'Cloud',
-            'Steam + Gear': 'Steamship',
-            'Gear + Steam': 'Steamship',
-            'Steam + Chip': 'Sauna',
-            'Chip + Steam': 'Sauna',
-
-            'Magma + Fire': 'Forge',
-            'Fire + Magma': 'Forge',
-            'Magma + Water': 'Geothermal Plant',
-            'Water + Magma': 'Geothermal Plant',
-            'Magma + Earth': 'Lava Field',
-            'Earth + Magma': 'Lava Field',
-            'Magma + Air': 'Ash Cloud',
-            'Air + Magma': 'Ash Cloud',
-            'Magma + Gear': 'Foundry',
-            'Gear + Magma': 'Foundry',
-            'Magma + Chip': 'Glass',
-            'Chip + Magma': 'Glass',
-
-            'Smoke + Fire': 'Ember Ash',
-            'Fire + Smoke': 'Ember Ash',
-            'Smoke + Water': 'Vapor Cloud',
-            'Water + Smoke': 'Vapor Cloud',
-            'Smoke + Earth': 'Dust Mound',
-            'Earth + Smoke': 'Dust Mound',
-            'Smoke + Air': 'Ash Cloud',
-            'Air + Smoke': 'Ash Cloud',
-            'Smoke + Gear': 'Steam Engine',
-            'Gear + Smoke': 'Steam Engine',
-            'Smoke + Chip': 'Microprocessor',
-            'Chip + Smoke': 'Microprocessor',
-
-            'Tide + Fire': 'Steamship',
-            'Fire + Tide': 'Steamship',
-            'Tide + Water': 'Ocean',
-            'Water + Tide': 'Ocean',
-            'Tide + Earth': 'Estuary',
-            'Earth + Tide': 'Estuary',
-            'Tide + Air': 'Sea Breeze',
-            'Air + Tide': 'Sea Breeze',
-            'Tide + Gear': 'Sea Spray',
-            'Gear + Tide': 'Sea Spray',
-            'Tide + Chip': 'Thunderstorm',
-            'Chip + Tide': 'Thunderstorm',
-
-            'Mud + Fire': 'Brick Kiln',
-            'Fire + Mud': 'Brick Kiln',
-            'Mud + Water': 'Clay Pottery',
-            'Water + Mud': 'Clay Pottery',
-            'Mud + Earth': 'Clay',
-            'Earth + Mud': 'Clay',
-            'Mud + Air': 'Dust Mound',
-            'Air + Mud': 'Dust Mound',
-            'Mud + Gear': 'Silt',
-            'Gear + Mud': 'Silt',
-            'Mud + Chip': 'Sand',
-            'Chip + Mud': 'Sand',
-
-            // Continue with remaining Tier 2 + Tier 1 combinations
-            'Mist + Fire': 'Sauna',
-            'Fire + Mist': 'Sauna',
-            'Mist + Water': 'Dew',
-            'Water + Mist': 'Dew',
-            'Mist + Earth': 'Morning Fog',
-            'Earth + Mist': 'Morning Fog',
-            'Mist + Air': 'Vapor Cloud',
-            'Air + Mist': 'Vapor Cloud',
-
-            'Stone + Fire': 'Glass',
-            'Fire + Stone': 'Glass',
-            'Stone + Water': 'Marble',
-            'Water + Stone': 'Marble',
-            'Stone + Earth': 'Boulder',
-            'Earth + Stone': 'Boulder',
-            'Stone + Air': 'Sandstone',
-            'Air + Stone': 'Sandstone',
-
-            'Sandstorm + Fire': 'Fire Whirl',
-            'Fire + Sandstorm': 'Fire Whirl',
-            'Sandstorm + Water': 'Dust Storm',
-            'Water + Sandstorm': 'Dust Storm',
-            'Sandstorm + Earth': 'Dust Devil',
-            'Earth + Sandstorm': 'Dust Devil',
-            'Sandstorm + Air': 'Tornado',
-            'Air + Sandstorm': 'Tornado',
-
-            'Gale + Fire': 'Fire Whirl',
-            'Fire + Gale': 'Fire Whirl',
-            'Gale + Water': 'Sea Spray',
-            'Water + Gale': 'Sea Spray',
-            'Gale + Earth': 'Dust Storm',
-            'Earth + Gale': 'Dust Storm',
-            'Gale + Air': 'Tornado',
-            'Air + Gale': 'Tornado',
-
-            'Android + Gear': 'Robot Arm',
-            'Gear + Android': 'Robot Arm',
-            'Android + Chip': 'Drone',
-            'Chip + Android': 'Drone',
-
-            'Automaton + Gear': 'Gearbox',
-            'Gear + Automaton': 'Gearbox',
-            'Automaton + Chip': 'Smartwatch',
-            'Chip + Automaton': 'Smartwatch',
-
-            'AI Core + Gear': 'Mechatronics',
-            'Gear + AI Core': 'Mechatronics',
-            'AI Core + Chip': 'Microprocessor',
-            'Chip + AI Core': 'Microprocessor',
-
-            // Tier 2 + Tier 2 = Tier 4 (Skip Tier 3 for more powerful combinations)
-            'Lava + Steam': 'Inferno',
-            'Steam + Lava': 'Inferno',
-            'Lava + Magma': 'Molten Core',
-            'Magma + Lava': 'Molten Core',
-            'Tide + Gale': 'Hurricane',
-            'Gale + Tide': 'Hurricane',
-            'Stone + Sandstorm': 'Earthquake',
-            'Sandstorm + Stone': 'Earthquake',
-            'Android + AI Core': 'Cybernetics',
-            'AI Core + Android': 'Cybernetics',
-            'Automaton + AI Core': 'Quantum Core',
-            'AI Core + Automaton': 'Quantum Core',
-
-            // Tier 3 + Tier 3 = Tier 5
-            'Volcano + Thunderstorm': 'Phoenix',
-            'Thunderstorm + Volcano': 'Phoenix',
-            'Ocean + Tornado': 'Leviathan',
-            'Tornado + Ocean': 'Leviathan',
-            'Boulder + Earthquake': 'Titan',
-            'Earthquake + Boulder': 'Titan',
-            'Plasma Torch + Static Storm': 'Tempest Lord',
-            'Static Storm + Plasma Torch': 'Tempest Lord',
-            'Mechatronics + Microprocessor': 'Cyber Dragon',
-            'Microprocessor + Mechatronics': 'Cyber Dragon',
-            'Forge + Geothermal Plant': 'Quantum Beast',
-            'Geothermal Plant + Forge': 'Quantum Beast',
-
-            // Tier 4 + Tier 4 = Tier 5
-            'Inferno + Hurricane': 'Elemental Avatar',
-            'Hurricane + Inferno': 'Elemental Avatar',
-            'Molten Core + Lightning Storm': 'Storm King',
-            'Lightning Storm + Molten Core': 'Storm King',
-
-            // Tier 5 + Tier 5 = Tier 6 (Ultimate Fusions)
-            'Phoenix + Leviathan': 'Primordial Force',
-            'Leviathan + Phoenix': 'Primordial Force',
-            'Titan + Tempest Lord': 'World Ender',
-            'Tempest Lord + Titan': 'World Ender',
-            'Cyber Dragon + Quantum Beast': 'Genesis Core',
-            'Quantum Beast + Cyber Dragon': 'Genesis Core',
-            'Elemental Avatar + Storm King': 'Omega Protocol',
-            'Storm King + Elemental Avatar': 'Omega Protocol',
-
-            // Special Tier 6 combinations
-            'Primordial Force + World Ender': 'Cosmic Entity',
-            'World Ender + Primordial Force': 'Cosmic Entity',
-            'Genesis Core + Omega Protocol': 'Reality Shaper',
-            'Omega Protocol + Genesis Core': 'Reality Shaper'
-        };
     }
-    
+
+    generateCompleteFusionMatrix() {
+        const elements = Object.keys(this.baseElements);
+
+        // Create fusion recipes for every possible combination
+        for (let i = 0; i < elements.length; i++) {
+            for (let j = i; j < elements.length; j++) {
+                const element1 = elements[i];
+                const element2 = elements[j];
+
+                const result = this.determineFusionResult(element1, element2);
+
+                // Add both combinations (A + B and B + A)
+                this.fusionRecipes[`${element1} + ${element2}`] = result;
+                if (element1 !== element2) {
+                    this.fusionRecipes[`${element2} + ${element1}`] = result;
+                }
+            }
+        }
+    }
+
+    determineFusionResult(element1, element2) {
+        const data1 = this.baseElements[element1];
+        const data2 = this.baseElements[element2];
+
+        // If same element, create enhanced version
+        if (element1 === element2) {
+            return this.getSameElementFusion(element1);
+        }
+
+        // Determine result based on tier combination
+        const tier1 = data1.tier;
+        const tier2 = data2.tier;
+        const maxTier = Math.max(tier1, tier2);
+        const minTier = Math.min(tier1, tier2);
+
+        // Get fusion result based on element types and tiers
+        return this.getElementFusion(element1, element2, tier1, tier2, maxTier, minTier);
+    }
+
+    getSameElementFusion(element) {
+        const sameElementFusions = {
+            // Tier 1 same-element fusions
+            'Fire': 'Lava',
+            'Water': 'Tide',
+            'Earth': 'Stone',
+            'Air': 'Gale',
+            'Gear': 'Android',
+            'Chip': 'AI Core',
+
+            // Tier 2 same-element fusions
+            'Lava': 'Molten Core',
+            'Steam': 'Cloud',
+            'Magma': 'Volcano',
+            'Smoke': 'Ash Cloud',
+            'Tide': 'Ocean',
+            'Mud': 'Clay',
+            'Mist': 'Morning Fog',
+            'Stone': 'Boulder',
+            'Sandstorm': 'Dust Storm',
+            'Gale': 'Tornado',
+            'Android': 'Cybernetics',
+            'Automaton': 'Mechatronics',
+            'AI Core': 'Quantum Core',
+
+            // Higher tier same-element fusions
+            'Foundry': 'Inferno',
+            'Ocean': 'Leviathan',
+            'Tornado': 'Tempest Lord',
+            'Cybernetics': 'Cyber Dragon',
+            'Phoenix': 'Primordial Force',
+            'Leviathan': 'World Ender',
+            'Titan': 'Genesis Core',
+            'Cyber Dragon': 'Omega Protocol',
+            'Primordial Force': 'Cosmic Entity',
+            'World Ender': 'Reality Shaper'
+        };
+
+        return sameElementFusions[element] || this.getGenericUpgrade(element);
+    }
+
+    getElementFusion(element1, element2, tier1, tier2, maxTier, minTier) {
+        // Predefined fusion combinations for specific pairs
+        const specificFusions = {
+            'Fire + Water': 'Steam',
+            'Fire + Earth': 'Magma',
+            'Fire + Air': 'Smoke',
+            'Fire + Gear': 'Forge',
+            'Fire + Chip': 'Plasma Torch',
+            'Water + Earth': 'Mud',
+            'Water + Air': 'Mist',
+            'Water + Gear': 'Steam Engine',
+            'Water + Chip': 'Distillery',
+            'Earth + Air': 'Sandstorm',
+            'Earth + Gear': 'Boulder',
+            'Earth + Chip': 'Clay',
+            'Air + Gear': 'Drone',
+            'Air + Chip': 'Static Storm',
+            'Gear + Chip': 'Automaton',
+
+            // Tier 2 combinations
+            'Lava + Steam': 'Inferno',
+            'Lava + Magma': 'Molten Core',
+            'Steam + Magma': 'Geothermal Plant',
+            'Steam + Smoke': 'Vapor Cloud',
+            'Magma + Smoke': 'Ash Cloud',
+            'Tide + Gale': 'Hurricane',
+            'Mud + Mist': 'Morning Fog',
+            'Stone + Sandstorm': 'Earthquake',
+            'Android + AI Core': 'Cybernetics',
+            'Automaton + AI Core': 'Quantum Core',
+
+            // Cross-tier combinations
+            'Lava + Fire': 'Foundry',
+            'Steam + Water': 'Distillery',
+            'Magma + Earth': 'Lava Field',
+            'Smoke + Air': 'Ash Cloud',
+            'Tide + Water': 'Ocean',
+            'Mud + Earth': 'Clay',
+            'Mist + Air': 'Vapor Cloud',
+            'Stone + Earth': 'Boulder',
+            'Gale + Air': 'Tornado',
+            'Android + Gear': 'Robot Arm',
+            'AI Core + Chip': 'Microprocessor'
+        };
+
+        // Check for specific fusion first
+        const key1 = `${element1} + ${element2}`;
+        const key2 = `${element2} + ${element1}`;
+
+        if (specificFusions[key1]) return specificFusions[key1];
+        if (specificFusions[key2]) return specificFusions[key2];
+
+        // Generate fusion based on tier logic
+        return this.generateTierBasedFusion(element1, element2, tier1, tier2, maxTier, minTier);
+    }
+
+    generateTierBasedFusion(element1, element2, tier1, tier2, maxTier, minTier) {
+        // Get all elements of target tier
+        const targetTier = Math.min(6, maxTier + 1); // Next tier up, max tier 6
+        const targetElements = Object.keys(this.baseElements).filter(name =>
+            this.baseElements[name].tier === targetTier
+        );
+
+        if (targetElements.length === 0) {
+            // If no elements in target tier, return highest tier element
+            const highestTierElements = Object.keys(this.baseElements).filter(name =>
+                this.baseElements[name].tier === 6
+            );
+            return highestTierElements[Math.floor(Math.random() * highestTierElements.length)];
+        }
+
+        // Select result based on element characteristics
+        return this.selectBestFusionResult(element1, element2, targetElements);
+    }
+
+    selectBestFusionResult(element1, element2, targetElements) {
+        // Categorize elements by type for better fusion logic
+        const elementTypes = {
+            fire: ['Fire', 'Lava', 'Magma', 'Smoke', 'Foundry', 'Forge', 'Ember Ash', 'Fire Whirl', 'Inferno', 'Molten Core', 'Plasma Torch', 'Phoenix'],
+            water: ['Water', 'Steam', 'Tide', 'Mud', 'Mist', 'Geyser', 'Steam Engine', 'Distillery', 'Hot Spring', 'Cloud', 'Steamship', 'Ocean', 'Estuary', 'Sea Breeze', 'Dew', 'Vapor Cloud', 'Sea Spray', 'Leviathan'],
+            earth: ['Earth', 'Stone', 'Sandstorm', 'Volcano', 'Lava Field', 'Brick Kiln', 'Clay Pottery', 'Clay', 'Dust Mound', 'Glass', 'Marble', 'Boulder', 'Sandstone', 'Silt', 'Sand', 'Earthquake', 'Titan'],
+            air: ['Air', 'Gale', 'Pyroclastic Flow', 'Ash Cloud', 'Morning Fog', 'Dust Devil', 'Tornado', 'Hurricane', 'Tempest Lord'],
+            tech: ['Gear', 'Chip', 'Android', 'Automaton', 'AI Core', 'Robot Arm', 'Drone', 'Gearbox', 'Smartwatch', 'Mechatronics', 'Microprocessor', 'Cybernetics', 'Quantum Core', 'Mechanical Beast', 'Cyber Dragon', 'Quantum Beast', 'Omega Protocol'],
+            energy: ['Plasma Torch', 'Thunderstorm', 'Electromagnet', 'Static Storm', 'Lightning Storm', 'Storm King'],
+            ultimate: ['Primordial Force', 'World Ender', 'Genesis Core', 'Cosmic Entity', 'Reality Shaper', 'Elemental Avatar']
+        };
+
+        // Find types of input elements
+        const type1 = this.getElementType(element1, elementTypes);
+        const type2 = this.getElementType(element2, elementTypes);
+
+        // Filter target elements by compatible types
+        let compatibleElements = targetElements.filter(element => {
+            const elementType = this.getElementType(element, elementTypes);
+            return elementType === type1 || elementType === type2 || elementType === 'ultimate';
+        });
+
+        if (compatibleElements.length === 0) {
+            compatibleElements = targetElements;
+        }
+
+        // Return a random compatible element
+        return compatibleElements[Math.floor(Math.random() * compatibleElements.length)];
+    }
+
+    getElementType(element, elementTypes) {
+        for (const [type, elements] of Object.entries(elementTypes)) {
+            if (elements.includes(element)) {
+                return type;
+            }
+        }
+        return 'neutral';
+    }
+
+    getGenericUpgrade(element) {
+        const data = this.baseElements[element];
+        const nextTier = Math.min(6, data.tier + 1);
+
+        const nextTierElements = Object.keys(this.baseElements).filter(name =>
+            this.baseElements[name].tier === nextTier
+        );
+
+        if (nextTierElements.length > 0) {
+            return nextTierElements[Math.floor(Math.random() * nextTierElements.length)];
+        }
+
+        return element; // Return same element if no upgrade available
+    }
+
     initializeEventListeners() {
         document.getElementById('start-game-btn').addEventListener('click', () => this.startGame());
         document.getElementById('tutorial-btn').addEventListener('click', () => this.showTutorial());
