@@ -54,14 +54,14 @@ Fusion Battlegrounds is an auto-battler where you build an army of elemental cre
 
 ## 🚀 Getting Started
 
-### Play Online
-1. Navigate to the `augmentbattlegroundstest` folder
-2. Open `index.html` in your web browser
-3. Click "Start Game" to begin!
+### 🌐 Play Online (Recommended)
+**🎮 [Play Fusion Battlegrounds Now!](https://asgervitus.github.io/elementalbattlegrounds/)**
+
+The game is hosted on GitHub Pages and ready to play instantly in your browser!
 
 ### Local Development
 1. Clone this repository
-2. Navigate to `augmentbattlegroundstest` folder
+2. Open `index.html` in your web browser, or
 3. Start a local server: `python3 -m http.server 8000`
 4. Open `http://localhost:8000` in your browser
 
