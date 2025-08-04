@@ -7,7 +7,7 @@ class FusionBattlegrounds {
         this.maxHealth = 40;
         this.board = [];  // Only board, no hand
         this.shop = [];
-        this.fusionSlots = [null, null];
+        this.selectedElements = []; // For click-to-fuse system
         this.alchemySlots = [null, null, null, null, null]; // 5 alchemy slots
         this.alchemyElements = []; // Track element types for coloring
         this.shopTier = 1;
@@ -352,8 +352,7 @@ class FusionBattlegrounds {
         document.getElementById('settings-btn').addEventListener('click', () => this.showSettings());
         document.getElementById('refresh-btn').addEventListener('click', () => this.refreshShop());
         document.getElementById('end-turn-btn').addEventListener('click', () => this.endTurn());
-        document.getElementById('fuse-btn').addEventListener('click', () => this.fuseElements());
-        document.getElementById('clear-fusion-btn').addEventListener('click', () => this.clearFusion());
+
         document.getElementById('clear-log-btn').addEventListener('click', () => this.clearLog());
         document.getElementById('extract-btn').addEventListener('click', () => this.extractAlchemyResult());
         document.getElementById('close-tutorial').addEventListener('click', () => this.hideTutorial());
@@ -369,7 +368,6 @@ class FusionBattlegrounds {
         document.getElementById('game-interface').classList.remove('hidden');
 
         // Setup drag and drop after interface is visible
-        this.setupFusionSlots();
 
         this.startNewTurn();
         this.playSound('click');
@@ -411,9 +409,6 @@ class FusionBattlegrounds {
             }
         });
 
-        // Set up fusion slot drop zones
-        this.setupFusionSlots();
-
         // Set up board drop zone
         this.setupBoardDropZone();
 
@@ -421,26 +416,7 @@ class FusionBattlegrounds {
         this.setupAlchemySlots();
     }
 
-    setupFusionSlots() {
-        const fusionSlots = document.querySelectorAll('.fusion-slot');
-        fusionSlots.forEach(slot => {
-            slot.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                slot.classList.add('drag-over');
-            });
 
-            slot.addEventListener('dragleave', () => {
-                slot.classList.remove('drag-over');
-            });
-
-            slot.addEventListener('drop', (e) => {
-                e.preventDefault();
-                slot.classList.remove('drag-over');
-                const elementId = e.dataTransfer.getData('text/plain');
-                this.addToFusionSlot(elementId, slot);
-            });
-        });
-    }
 
     setupBoardDropZone() {
         const boardZone = document.getElementById('board-elements');
@@ -718,6 +694,134 @@ class FusionBattlegrounds {
         // Use the same type-based logic as fusion
         return this.selectBestFusionResult('', '', tier5Elements);
     }
+
+    selectElementForFusion(elementId) {
+        const element = this.board.find(e => e.id == elementId);
+        if (!element) return;
+
+        // Check if element is already selected
+        const selectedIndex = this.selectedElements.findIndex(e => e.id == elementId);
+
+        if (selectedIndex !== -1) {
+            // Deselect element
+            this.selectedElements.splice(selectedIndex, 1);
+            this.updateElementSelection();
+            this.playSound('click');
+            return;
+        }
+
+        // Add to selection
+        this.selectedElements.push(element);
+
+        // If we have 2 elements selected, attempt fusion
+        if (this.selectedElements.length === 2) {
+            this.performDirectFusion();
+        } else if (this.selectedElements.length > 2) {
+            // Keep only the last 2 selected
+            this.selectedElements = this.selectedElements.slice(-2);
+            this.performDirectFusion();
+        }
+
+        this.updateElementSelection();
+        this.playSound('click');
+    }
+
+    performDirectFusion() {
+        if (this.selectedElements.length !== 2) return;
+
+        const element1 = this.selectedElements[0];
+        const element2 = this.selectedElements[1];
+
+        // Check if both elements are still on the board
+        const boardElement1 = this.board.find(e => e.id == element1.id);
+        const boardElement2 = this.board.find(e => e.id == element2.id);
+
+        if (!boardElement1 || !boardElement2) {
+            this.selectedElements = [];
+            this.updateElementSelection();
+            return;
+        }
+
+        // Get fusion result
+        const recipe1 = `${element1.name} + ${element2.name}`;
+        const recipe2 = `${element2.name} + ${element1.name}`;
+        const result = this.fusionRecipes[recipe1] || this.fusionRecipes[recipe2];
+
+        if (result && this.baseElements[result]) {
+            // Remove the two elements from board
+            this.board = this.board.filter(e => e.id !== element1.id && e.id !== element2.id);
+
+            // Create new fused element
+            const newElement = this.createElement(result);
+            this.board.push(newElement);
+
+            // Clear selection
+            this.selectedElements = [];
+
+            this.updateDisplay();
+            this.playSound('fusion');
+            this.log(`Fused ${element1.name} + ${element2.name} = ${result}!`);
+            this.showNotification(`Fusion Success: ${result}!`, 'success');
+
+            // Add fusion particle effect
+            this.createFusionParticles();
+        } else {
+            // Fusion failed
+            this.selectedElements = [];
+            this.updateElementSelection();
+            this.log(`No fusion recipe for ${element1.name} + ${element2.name}`);
+            this.showNotification('Fusion failed - no recipe found!', 'error');
+        }
+    }
+
+    updateElementSelection() {
+        // Update visual selection on all board elements
+        const boardCards = document.querySelectorAll('#board-elements .element-card');
+        boardCards.forEach(card => {
+            const elementId = parseInt(card.dataset.elementId);
+            const isSelected = this.selectedElements.some(e => e.id === elementId);
+
+            if (isSelected) {
+                card.classList.add('selected-for-fusion');
+            } else {
+                card.classList.remove('selected-for-fusion');
+            }
+        });
+    }
+
+    createFusionParticles() {
+        // Create visual particle effect for successful fusion
+        const boardSection = document.getElementById('board-elements');
+        if (!boardSection) return;
+
+        for (let i = 0; i < 8; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'fusion-particle';
+            particle.style.cssText = `
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                background: radial-gradient(circle, #4ecdc4, #44a08d);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000;
+                animation: fusionBurst 1.5s ease-out forwards;
+                animation-delay: ${i * 0.1}s;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            `;
+
+            boardSection.appendChild(particle);
+
+            // Remove particle after animation
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 1500 + i * 100);
+        }
+    }
     
     generateShop() {
         this.shop = [];
@@ -768,70 +872,7 @@ class FusionBattlegrounds {
         }
     }
     
-    addToFusionSlot(elementId, slot) {
-        const slotIndex = slot.id === 'fusion-slot-1' ? 0 : 1;
-        let element = this.board.find(e => e.id == elementId);
 
-        if (element && !this.fusionSlots[slotIndex]) {
-            this.fusionSlots[slotIndex] = element;
-            this.board = this.board.filter(e => e.id != elementId);
-            this.updateDisplay();
-            this.checkFusionReady();
-        }
-    }
-    
-    checkFusionReady() {
-        const fuseBtn = document.getElementById('fuse-btn');
-        fuseBtn.disabled = !this.fusionSlots[0] || !this.fusionSlots[1];
-        
-        if (this.fusionSlots[0] && this.fusionSlots[1]) {
-            const recipe = `${this.fusionSlots[0].name} + ${this.fusionSlots[1].name}`;
-            const result = this.fusionRecipes[recipe];
-            const preview = document.getElementById('fusion-result');
-
-            if (result) {
-                const resultData = this.baseElements[result];
-                const emoji = resultData ? resultData.emoji : '⭐';
-                preview.innerHTML = `<div class="result-emoji">${emoji}</div><div class="result-name">${result}</div>`;
-                preview.classList.add('known');
-            } else {
-                preview.innerHTML = `<div class="result-placeholder">❓</div>`;
-                preview.classList.remove('known');
-            }
-        }
-    }
-    
-    fuseElements() {
-        if (!this.fusionSlots[0] || !this.fusionSlots[1]) return;
-        
-        const recipe = `${this.fusionSlots[0].name} + ${this.fusionSlots[1].name}`;
-        const result = this.fusionRecipes[recipe];
-        
-        if (result && this.baseElements[result]) {
-            const newElement = this.createElement(result);
-            this.board.push(newElement); // Add result to board
-            this.playSound('fusion');
-            this.log(`Fused ${this.fusionSlots[0].name} + ${this.fusionSlots[1].name} = ${result}!`);
-            this.showNotification(`Created ${result}!`, 'success');
-        } else {
-            this.board.push(this.fusionSlots[0], this.fusionSlots[1]); // Return to board
-            this.log(`No fusion recipe for ${recipe}`);
-            this.showNotification('Fusion failed!', 'error');
-        }
-        
-        this.fusionSlots = [null, null];
-        this.updateDisplay();
-        this.checkFusionReady();
-    }
-    
-    clearFusion() {
-        if (this.fusionSlots[0]) this.board.push(this.fusionSlots[0]);
-        if (this.fusionSlots[1]) this.board.push(this.fusionSlots[1]);
-        this.fusionSlots = [null, null];
-        this.updateDisplay();
-        this.checkFusionReady();
-        this.playSound('click');
-    }
     
     clearLog() {
         document.getElementById('log-content').innerHTML = '';
@@ -968,7 +1009,7 @@ class FusionBattlegrounds {
         this.health = 40;
         this.board = [];
         this.shop = [];
-        this.fusionSlots = [null, null];
+        this.selectedElements = [];
         this.alchemySlots = [null, null, null, null, null];
         this.alchemyElements = [];
         this.clearLog();
@@ -996,8 +1037,9 @@ class FusionBattlegrounds {
         
         if (container === 'shop') {
             card.addEventListener('click', () => this.buyElement(element.id));
+        } else if (container === 'board') {
+            card.addEventListener('click', () => this.selectElementForFusion(element.id));
         }
-        // Remove hand-specific logic since we only have board now
         
         return card;
     }
@@ -1074,18 +1116,7 @@ class FusionBattlegrounds {
             boardContainer.appendChild(this.createElementCard(element, 'board'));
         });
         
-        document.querySelectorAll('.fusion-slot').forEach((slot, index) => {
-            if (this.fusionSlots[index]) {
-                const element = this.fusionSlots[index];
-                const elementData = this.baseElements[element.name];
-                const emoji = elementData ? elementData.emoji : '❓';
-                slot.innerHTML = `<div class="slot-emoji">${emoji}</div>`;
-                slot.classList.add('filled');
-            } else {
-                slot.innerHTML = `<div class="slot-placeholder">Drop Element</div>`;
-                slot.classList.remove('filled');
-            }
-        });
+
 
         // Update alchemy slots
         document.querySelectorAll('.alchemy-slot').forEach((slot, index) => {
