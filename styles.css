@@ -329,11 +329,19 @@ body::before {
     gap: 10px;
     padding: 10px;
     overflow: hidden;
+    min-height: 0; /* Ensure grid items can shrink */
 }
 
 .log-panel {
     grid-column: 1 / -1; /* Span both columns */
 }
+
+/* Ensure all panels are visible */
+#shop-section { grid-area: 1 / 1 / 2 / 2; }
+#board-section { grid-area: 1 / 2 / 2 / 3; }
+#fusion-section { grid-area: 2 / 1 / 3 / 2; }
+#alchemy-section { grid-area: 2 / 2 / 3 / 3; }
+#log-section { grid-area: 3 / 1 / 4 / 3; }
 
 .game-panel {
     background: rgba(255, 255, 255, 0.03);
@@ -1258,13 +1266,50 @@ body::before {
     .elements-grid {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     }
-    
+
     .element-card {
         min-height: 120px;
         padding: 8px;
     }
-    
+
     .element-emoji {
         font-size: 24px;
+    }
+
+    .alchemy-apparatus {
+        width: 100px;
+        height: 120px;
+    }
+
+    .alchemy-flask {
+        width: 50px;
+        height: 70px;
+    }
+
+    .alchemy-slots {
+        gap: 6px;
+    }
+
+    .alchemy-slot {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (max-width: 900px) {
+    #main-game-area {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+        gap: 8px;
+    }
+
+    #shop-section { grid-area: 1 / 1 / 2 / 2; }
+    #board-section { grid-area: 2 / 1 / 3 / 2; }
+    #fusion-section { grid-area: 3 / 1 / 4 / 2; }
+    #alchemy-section { grid-area: 4 / 1 / 5 / 2; }
+    #log-section { grid-area: 5 / 1 / 6 / 2; }
+
+    .log-panel {
+        grid-column: 1 / 2;
     }
 }
