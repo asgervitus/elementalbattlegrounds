@@ -40,18 +40,19 @@
 
         <!-- Game Interface -->
         <div id="game-interface" class="hidden">
+            <!-- Top Bar -->
             <div id="game-header">
                 <div id="player-info">
                     <div class="stat-item">
-                        <i class="fas fa-coins"></i>
+                        <span class="stat-icon">💰</span>
                         <span>Gold: <span id="gold">3</span></span>
                     </div>
                     <div class="stat-item">
-                        <i class="fas fa-clock"></i>
+                        <span class="stat-icon">⏰</span>
                         <span>Turn: <span id="turn">1</span></span>
                     </div>
                     <div class="stat-item health">
-                        <i class="fas fa-heart"></i>
+                        <span class="stat-icon">❤️</span>
                         <span>Health: <span id="health">40</span></span>
                         <div class="health-bar">
                             <div id="health-fill" class="health-fill"></div>
@@ -59,91 +60,67 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button id="settings-game-btn" class="icon-btn">
-                        <i class="fas fa-cog"></i>
+                    <button id="refresh-btn" class="action-btn">
+                        🔄 Refresh (1💰)
                     </button>
                     <button id="end-turn-btn" class="primary-btn">
-                        <i class="fas fa-forward"></i> End Turn
-                    </button>
-                </div>
-            </div>
-            
-            <div id="shop-section" class="game-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-store"></i> Tavern</h3>
-                    <div class="shop-actions">
-                        <button id="refresh-btn" class="action-btn">
-                            <i class="fas fa-sync-alt"></i> Refresh (1 <i class="fas fa-coins"></i>)
-                        </button>
-                        <div class="shop-tier">Tier <span id="shop-tier">1</span></div>
-                    </div>
-                </div>
-                <div id="shop-elements" class="elements-container"></div>
-            </div>
-            
-            <div id="hand-section" class="game-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-hand-paper"></i> Your Hand (<span id="hand-count">0</span>/10)</h3>
-                </div>
-                <div id="hand-elements" class="elements-container"></div>
-            </div>
-            
-            <div id="board-section" class="game-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-chess-board"></i> Your Board (<span id="board-count">0</span>/7)</h3>
-                    <div class="board-power">
-                        Power: <span id="board-power">0</span>
-                    </div>
-                </div>
-                <div id="board-elements" class="elements-container board-container"></div>
-            </div>
-            
-            <div id="fusion-area" class="game-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-fire"></i> Fusion Chamber</h3>
-                    <button id="clear-fusion-btn" class="action-btn secondary">
-                        <i class="fas fa-times"></i> Clear
-                    </button>
-                </div>
-                <div id="fusion-content">
-                    <div id="fusion-slots">
-                        <div class="fusion-slot" id="fusion-slot-1">
-                            <div class="slot-content">
-                                <i class="fas fa-plus"></i>
-                                <span>Drop Element 1</span>
-                            </div>
-                        </div>
-                        <div class="fusion-operator">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="fusion-slot" id="fusion-slot-2">
-                            <div class="slot-content">
-                                <i class="fas fa-plus"></i>
-                                <span>Drop Element 2</span>
-                            </div>
-                        </div>
-                        <div class="fusion-operator">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                        <div id="fusion-preview" class="fusion-preview">
-                            <i class="fas fa-question"></i>
-                            <span>Unknown</span>
-                        </div>
-                    </div>
-                    <button id="fuse-btn" class="primary-btn" disabled>
-                        <i class="fas fa-magic"></i> Fuse Elements
+                        ⏭️ End Turn
                     </button>
                 </div>
             </div>
 
-            <div id="battle-log" class="game-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-scroll"></i> Battle Log</h3>
-                    <button id="clear-log-btn" class="action-btn secondary">
-                        <i class="fas fa-trash"></i> Clear
-                    </button>
+            <!-- Main Game Area -->
+            <div id="main-game-area">
+                <!-- Shop -->
+                <div id="shop-section" class="game-panel">
+                    <div class="panel-header">
+                        <h3>🏪 Shop (Tier <span id="shop-tier">1</span>)</h3>
+                    </div>
+                    <div id="shop-elements" class="elements-grid"></div>
                 </div>
-                <div id="log-content"></div>
+
+                <!-- Your Army -->
+                <div id="board-section" class="game-panel">
+                    <div class="panel-header">
+                        <h3>⚔️ Your Army (<span id="board-count">0</span>/7) - Power: <span id="board-power">0</span></h3>
+                    </div>
+                    <div id="board-elements" class="elements-grid board-drop-zone"></div>
+                </div>
+
+                <!-- Fusion Chamber -->
+                <div id="fusion-section" class="game-panel">
+                    <div class="panel-header">
+                        <h3>🧪 Fusion Chamber</h3>
+                        <button id="clear-fusion-btn" class="clear-btn">❌</button>
+                    </div>
+                    <div id="fusion-area">
+                        <div class="fusion-slots">
+                            <div class="fusion-slot" id="fusion-slot-1">
+                                <div class="slot-placeholder">Drop Element</div>
+                            </div>
+                            <div class="fusion-operator">+</div>
+                            <div class="fusion-slot" id="fusion-slot-2">
+                                <div class="slot-placeholder">Drop Element</div>
+                            </div>
+                            <div class="fusion-operator">=</div>
+                            <div id="fusion-result" class="fusion-result">
+                                <div class="result-placeholder">❓</div>
+                            </div>
+                        </div>
+                        <button id="fuse-btn" class="fuse-btn" disabled>
+                            ✨ Fuse
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Battle Log -->
+                <div id="log-section" class="game-panel">
+                    <div class="panel-header">
+                        <h3>📜 Battle Log</h3>
+                        <button id="clear-log-btn" class="clear-btn">🗑️</button>
+                    </div>
+                    <div id="log-content" class="log-content"></div>
+                </div>
             </div>
         </div>
 

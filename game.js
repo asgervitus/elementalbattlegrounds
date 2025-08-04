@@ -5,12 +5,11 @@ class FusionBattlegrounds {
         this.turn = 1;
         this.health = 40;
         this.maxHealth = 40;
-        this.hand = [];
-        this.board = [];
+        this.board = [];  // Only board, no hand
         this.shop = [];
         this.fusionSlots = [null, null];
         this.shopTier = 1;
-        
+
         this.initializeElements();
         this.initializeEventListeners();
         this.showLoadingScreen();
@@ -26,50 +25,50 @@ class FusionBattlegrounds {
     
     initializeElements() {
         this.baseElements = {
-            // Tier 1 - Basic Elements
-            'Fire': { attack: 3, health: 2, cost: 2, tier: 1, emoji: '🔥' },
-            'Water': { attack: 2, health: 3, cost: 2, tier: 1, emoji: '💧' },
+            // Tier 1 - Basic Elements (All cost 3 gold)
+            'Fire': { attack: 3, health: 2, cost: 3, tier: 1, emoji: '🔥' },
+            'Water': { attack: 2, health: 3, cost: 3, tier: 1, emoji: '💧' },
             'Earth': { attack: 2, health: 4, cost: 3, tier: 1, emoji: '🌍' },
-            'Air': { attack: 4, health: 1, cost: 2, tier: 1, emoji: '💨' },
+            'Air': { attack: 4, health: 1, cost: 3, tier: 1, emoji: '💨' },
             'Gear': { attack: 3, health: 3, cost: 3, tier: 1, emoji: '⚙️' },
             'Chip': { attack: 4, health: 2, cost: 3, tier: 1, emoji: '💾' },
 
-            // Tier 2 - Basic Fusions
-            'Lava': { attack: 6, health: 3, cost: 4, tier: 2, emoji: '🌋' },
-            'Steam': { attack: 3, health: 4, cost: 4, tier: 2, emoji: '♨️' },
-            'Magma': { attack: 5, health: 4, cost: 4, tier: 2, emoji: '🗻' },
-            'Smoke': { attack: 4, health: 3, cost: 4, tier: 2, emoji: '💨' },
-            'Tide': { attack: 4, health: 5, cost: 4, tier: 2, emoji: '🌊' },
-            'Mud': { attack: 3, health: 5, cost: 4, tier: 2, emoji: '🟫' },
-            'Mist': { attack: 3, health: 4, cost: 4, tier: 2, emoji: '🌫️' },
-            'Stone': { attack: 3, health: 7, cost: 5, tier: 2, emoji: '🪨' },
-            'Sandstorm': { attack: 5, health: 4, cost: 5, tier: 2, emoji: '🏜️' },
-            'Gale': { attack: 6, health: 2, cost: 4, tier: 2, emoji: '🌪️' },
-            'Android': { attack: 5, health: 5, cost: 5, tier: 2, emoji: '🤖' },
-            'Automaton': { attack: 4, health: 6, cost: 5, tier: 2, emoji: '🦾' },
-            'AI Core': { attack: 7, health: 3, cost: 5, tier: 2, emoji: '🧠' },
+            // Tier 2 - Basic Fusions (All cost 3 gold)
+            'Lava': { attack: 6, health: 3, cost: 3, tier: 2, emoji: '🌋' },
+            'Steam': { attack: 3, health: 4, cost: 3, tier: 2, emoji: '♨️' },
+            'Magma': { attack: 5, health: 4, cost: 3, tier: 2, emoji: '🗻' },
+            'Smoke': { attack: 4, health: 3, cost: 3, tier: 2, emoji: '💨' },
+            'Tide': { attack: 4, health: 5, cost: 3, tier: 2, emoji: '🌊' },
+            'Mud': { attack: 3, health: 5, cost: 3, tier: 2, emoji: '🟫' },
+            'Mist': { attack: 3, health: 4, cost: 3, tier: 2, emoji: '🌫️' },
+            'Stone': { attack: 3, health: 7, cost: 3, tier: 2, emoji: '🪨' },
+            'Sandstorm': { attack: 5, health: 4, cost: 3, tier: 2, emoji: '🏜️' },
+            'Gale': { attack: 6, health: 2, cost: 3, tier: 2, emoji: '🌪️' },
+            'Android': { attack: 5, health: 5, cost: 3, tier: 2, emoji: '🤖' },
+            'Automaton': { attack: 4, health: 6, cost: 3, tier: 2, emoji: '🦾' },
+            'AI Core': { attack: 7, health: 3, cost: 3, tier: 2, emoji: '🧠' },
 
-            // Tier 3 - Advanced Fusions
-            'Foundry': { attack: 8, health: 6, cost: 6, tier: 3, emoji: '🏭' },
-            'Geyser': { attack: 6, health: 7, cost: 6, tier: 3, emoji: '⛲' },
-            'Volcano': { attack: 9, health: 5, cost: 7, tier: 3, emoji: '🌋' },
-            'Pyroclastic Flow': { attack: 10, health: 4, cost: 7, tier: 3, emoji: '☄️' },
-            'Steam Engine': { attack: 7, health: 7, cost: 7, tier: 3, emoji: '🚂' },
-            'Distillery': { attack: 5, health: 8, cost: 6, tier: 3, emoji: '🥃' },
-            'Hot Spring': { attack: 4, health: 9, cost: 6, tier: 3, emoji: '♨️' },
-            'Cloud': { attack: 6, health: 6, cost: 6, tier: 3, emoji: '☁️' },
-            'Forge': { attack: 8, health: 7, cost: 7, tier: 3, emoji: '⚒️' },
-            'Geothermal Plant': { attack: 7, health: 8, cost: 8, tier: 3, emoji: '⚡' },
-            'Lava Field': { attack: 9, health: 6, cost: 8, tier: 3, emoji: '🌋' },
-            'Ash Cloud': { attack: 6, health: 7, cost: 7, tier: 3, emoji: '🌫️' },
-            'Plasma Torch': { attack: 12, health: 4, cost: 8, tier: 3, emoji: '🔥' },
-            'Thunderstorm': { attack: 8, health: 8, cost: 8, tier: 3, emoji: '⛈️' },
-            'Electromagnet': { attack: 7, health: 9, cost: 8, tier: 3, emoji: '🧲' },
-            'Static Storm': { attack: 10, health: 6, cost: 8, tier: 3, emoji: '🌩️' },
-            'Steamship': { attack: 6, health: 10, cost: 7, tier: 3, emoji: '🚢' },
-            'Ocean': { attack: 5, health: 12, cost: 7, tier: 3, emoji: '🌊' },
-            'Estuary': { attack: 7, health: 9, cost: 7, tier: 3, emoji: '🏞️' },
-            'Sea Breeze': { attack: 8, health: 7, cost: 7, tier: 3, emoji: '🌬️' },
+            // Tier 3 - Advanced Fusions (All cost 3 gold)
+            'Foundry': { attack: 8, health: 6, cost: 3, tier: 3, emoji: '🏭' },
+            'Geyser': { attack: 6, health: 7, cost: 3, tier: 3, emoji: '⛲' },
+            'Volcano': { attack: 9, health: 5, cost: 3, tier: 3, emoji: '🌋' },
+            'Pyroclastic Flow': { attack: 10, health: 4, cost: 3, tier: 3, emoji: '☄️' },
+            'Steam Engine': { attack: 7, health: 7, cost: 3, tier: 3, emoji: '🚂' },
+            'Distillery': { attack: 5, health: 8, cost: 3, tier: 3, emoji: '🥃' },
+            'Hot Spring': { attack: 4, health: 9, cost: 3, tier: 3, emoji: '♨️' },
+            'Cloud': { attack: 6, health: 6, cost: 3, tier: 3, emoji: '☁️' },
+            'Forge': { attack: 8, health: 7, cost: 3, tier: 3, emoji: '⚒️' },
+            'Geothermal Plant': { attack: 7, health: 8, cost: 3, tier: 3, emoji: '⚡' },
+            'Lava Field': { attack: 9, health: 6, cost: 3, tier: 3, emoji: '🌋' },
+            'Ash Cloud': { attack: 6, health: 7, cost: 3, tier: 3, emoji: '🌫️' },
+            'Plasma Torch': { attack: 12, health: 4, cost: 3, tier: 3, emoji: '🔥' },
+            'Thunderstorm': { attack: 8, health: 8, cost: 3, tier: 3, emoji: '⛈️' },
+            'Electromagnet': { attack: 7, health: 9, cost: 3, tier: 3, emoji: '🧲' },
+            'Static Storm': { attack: 10, health: 6, cost: 3, tier: 3, emoji: '🌩️' },
+            'Steamship': { attack: 6, health: 10, cost: 3, tier: 3, emoji: '🚢' },
+            'Ocean': { attack: 5, health: 12, cost: 3, tier: 3, emoji: '🌊' },
+            'Estuary': { attack: 7, health: 9, cost: 3, tier: 3, emoji: '🏞️' },
+            'Sea Breeze': { attack: 8, health: 7, cost: 3, tier: 3, emoji: '🌬️' },
             'Brick Kiln': { attack: 6, health: 9, cost: 7, tier: 3, emoji: '🧱' },
             'Clay Pottery': { attack: 5, health: 10, cost: 6, tier: 3, emoji: '🏺' },
             'Clay': { attack: 4, health: 11, cost: 6, tier: 3, emoji: '🟫' },
@@ -97,37 +96,37 @@ class FusionBattlegrounds {
             'Mechatronics': { attack: 10, health: 7, cost: 9, tier: 3, emoji: '🤖⚙️' },
             'Microprocessor': { attack: 11, health: 5, cost: 8, tier: 3, emoji: '💻' },
 
-            // Tier 4 - Master Fusions
-            'Inferno': { attack: 15, health: 8, cost: 10, tier: 4, emoji: '🔥🌋' },
-            'Tsunami': { attack: 12, health: 12, cost: 10, tier: 4, emoji: '🌊🌪️' },
-            'Earthquake': { attack: 10, health: 15, cost: 10, tier: 4, emoji: '🌍💥' },
-            'Hurricane': { attack: 14, health: 9, cost: 10, tier: 4, emoji: '🌪️⛈️' },
-            'Cybernetics': { attack: 13, health: 11, cost: 11, tier: 4, emoji: '🤖🧠' },
-            'Quantum Core': { attack: 16, health: 7, cost: 11, tier: 4, emoji: '⚛️💎' },
-            'Plasma Storm': { attack: 18, health: 6, cost: 12, tier: 4, emoji: '⚡🌩️' },
-            'Tidal Wave': { attack: 14, health: 10, cost: 11, tier: 4, emoji: '🌊💥' },
-            'Molten Core': { attack: 16, health: 9, cost: 12, tier: 4, emoji: '🌋🔥' },
-            'Lightning Storm': { attack: 17, health: 7, cost: 12, tier: 4, emoji: '⚡⛈️' },
-            'Crystal Formation': { attack: 11, health: 14, cost: 11, tier: 4, emoji: '💎🔮' },
-            'Mechanical Beast': { attack: 15, health: 10, cost: 12, tier: 4, emoji: '🤖🦾' },
+            // Tier 4 - Master Fusions (All cost 3 gold)
+            'Inferno': { attack: 15, health: 8, cost: 3, tier: 4, emoji: '🔥🌋' },
+            'Tsunami': { attack: 12, health: 12, cost: 3, tier: 4, emoji: '🌊🌪️' },
+            'Earthquake': { attack: 10, health: 15, cost: 3, tier: 4, emoji: '🌍💥' },
+            'Hurricane': { attack: 14, health: 9, cost: 3, tier: 4, emoji: '🌪️⛈️' },
+            'Cybernetics': { attack: 13, health: 11, cost: 3, tier: 4, emoji: '🤖🧠' },
+            'Quantum Core': { attack: 16, health: 7, cost: 3, tier: 4, emoji: '⚛️💎' },
+            'Plasma Storm': { attack: 18, health: 6, cost: 3, tier: 4, emoji: '⚡🌩️' },
+            'Tidal Wave': { attack: 14, health: 10, cost: 3, tier: 4, emoji: '🌊💥' },
+            'Molten Core': { attack: 16, health: 9, cost: 3, tier: 4, emoji: '🌋🔥' },
+            'Lightning Storm': { attack: 17, health: 7, cost: 3, tier: 4, emoji: '⚡⛈️' },
+            'Crystal Formation': { attack: 11, health: 14, cost: 3, tier: 4, emoji: '💎🔮' },
+            'Mechanical Beast': { attack: 15, health: 10, cost: 3, tier: 4, emoji: '🤖🦾' },
 
-            // Tier 5 - Legendary Fusions
-            'Phoenix': { attack: 20, health: 12, cost: 15, tier: 5, emoji: '🔥🦅' },
-            'Leviathan': { attack: 18, health: 15, cost: 15, tier: 5, emoji: '🌊🐉' },
-            'Titan': { attack: 16, health: 18, cost: 15, tier: 5, emoji: '🌍⛰️' },
-            'Tempest Lord': { attack: 22, health: 10, cost: 16, tier: 5, emoji: '🌪️👑' },
-            'Cyber Dragon': { attack: 19, health: 14, cost: 16, tier: 5, emoji: '🤖🐉' },
-            'Quantum Beast': { attack: 24, health: 8, cost: 17, tier: 5, emoji: '⚛️🦾' },
-            'Elemental Avatar': { attack: 20, health: 15, cost: 17, tier: 5, emoji: '🌟👤' },
-            'Storm King': { attack: 23, health: 11, cost: 17, tier: 5, emoji: '⚡👑' },
+            // Tier 5 - Legendary Fusions (All cost 3 gold)
+            'Phoenix': { attack: 20, health: 12, cost: 3, tier: 5, emoji: '🔥🦅' },
+            'Leviathan': { attack: 18, health: 15, cost: 3, tier: 5, emoji: '🌊🐉' },
+            'Titan': { attack: 16, health: 18, cost: 3, tier: 5, emoji: '🌍⛰️' },
+            'Tempest Lord': { attack: 22, health: 10, cost: 3, tier: 5, emoji: '🌪️👑' },
+            'Cyber Dragon': { attack: 19, health: 14, cost: 3, tier: 5, emoji: '🤖🐉' },
+            'Quantum Beast': { attack: 24, health: 8, cost: 3, tier: 5, emoji: '⚛️🦾' },
+            'Elemental Avatar': { attack: 20, health: 15, cost: 3, tier: 5, emoji: '🌟👤' },
+            'Storm King': { attack: 23, health: 11, cost: 3, tier: 5, emoji: '⚡👑' },
 
-            // Tier 6 - Ultimate Fusions
-            'Primordial Force': { attack: 30, health: 20, cost: 25, tier: 6, emoji: '🌌💫' },
-            'World Ender': { attack: 35, health: 15, cost: 25, tier: 6, emoji: '💀🌍' },
-            'Genesis Core': { attack: 25, health: 25, cost: 25, tier: 6, emoji: '⭐🌟' },
-            'Omega Protocol': { attack: 40, health: 10, cost: 25, tier: 6, emoji: '🤖👑' },
-            'Cosmic Entity': { attack: 32, health: 18, cost: 25, tier: 6, emoji: '🌌👁️' },
-            'Reality Shaper': { attack: 28, health: 22, cost: 25, tier: 6, emoji: '🔮🌟' }
+            // Tier 6 - Ultimate Fusions (All cost 3 gold)
+            'Primordial Force': { attack: 30, health: 20, cost: 3, tier: 6, emoji: '🌌💫' },
+            'World Ender': { attack: 35, health: 15, cost: 3, tier: 6, emoji: '💀🌍' },
+            'Genesis Core': { attack: 25, health: 25, cost: 3, tier: 6, emoji: '⭐🌟' },
+            'Omega Protocol': { attack: 40, health: 10, cost: 3, tier: 6, emoji: '🤖👑' },
+            'Cosmic Entity': { attack: 32, health: 18, cost: 3, tier: 6, emoji: '🌌👁️' },
+            'Reality Shaper': { attack: 28, health: 22, cost: 3, tier: 6, emoji: '🔮🌟' }
         };
         
         this.fusionRecipes = {
@@ -422,6 +421,9 @@ class FusionBattlegrounds {
 
         // Set up fusion slot drop zones
         this.setupFusionSlots();
+
+        // Set up board drop zone
+        this.setupBoardDropZone();
     }
 
     setupFusionSlots() {
@@ -443,6 +445,35 @@ class FusionBattlegrounds {
                 this.addToFusionSlot(elementId, slot);
             });
         });
+    }
+
+    setupBoardDropZone() {
+        const boardZone = document.getElementById('board-elements');
+        if (boardZone) {
+            boardZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                boardZone.classList.add('drag-over');
+            });
+
+            boardZone.addEventListener('dragleave', () => {
+                boardZone.classList.remove('drag-over');
+            });
+
+            boardZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                boardZone.classList.remove('drag-over');
+                const elementId = e.dataTransfer.getData('text/plain');
+                this.moveToBoard(elementId);
+            });
+        }
+    }
+
+    moveToBoard(elementId) {
+        // This handles dragging from shop to board
+        const element = this.shop.find(e => e.id == elementId);
+        if (element && this.gold >= element.cost && this.board.length < 7) {
+            this.buyElement(elementId);
+        }
     }
     
     generateShop() {
@@ -484,9 +515,9 @@ class FusionBattlegrounds {
     
     buyElement(elementId) {
         const element = this.shop.find(e => e.id == elementId);
-        if (element && this.gold >= element.cost && this.hand.length < 10) {
+        if (element && this.gold >= element.cost && this.board.length < 7) {
             this.gold -= element.cost;
-            this.hand.push(element);
+            this.board.push(element); // Add directly to board
             this.shop = this.shop.filter(e => e.id != elementId);
             this.updateDisplay();
             this.playSound('buy');
@@ -494,24 +525,12 @@ class FusionBattlegrounds {
         }
     }
     
-    playElement(elementId) {
-        const element = this.hand.find(e => e.id == elementId);
-        if (element && this.board.length < 7) {
-            this.board.push(element);
-            this.hand = this.hand.filter(e => e.id != elementId);
-            this.updateDisplay();
-            this.playSound('click');
-            this.log(`Played ${element.name} to board`);
-        }
-    }
-    
     addToFusionSlot(elementId, slot) {
         const slotIndex = slot.id === 'fusion-slot-1' ? 0 : 1;
-        let element = this.hand.find(e => e.id == elementId) || this.board.find(e => e.id == elementId);
-        
+        let element = this.board.find(e => e.id == elementId);
+
         if (element && !this.fusionSlots[slotIndex]) {
             this.fusionSlots[slotIndex] = element;
-            this.hand = this.hand.filter(e => e.id != elementId);
             this.board = this.board.filter(e => e.id != elementId);
             this.updateDisplay();
             this.checkFusionReady();
@@ -525,15 +544,15 @@ class FusionBattlegrounds {
         if (this.fusionSlots[0] && this.fusionSlots[1]) {
             const recipe = `${this.fusionSlots[0].name} + ${this.fusionSlots[1].name}`;
             const result = this.fusionRecipes[recipe];
-            const preview = document.getElementById('fusion-preview');
-            
+            const preview = document.getElementById('fusion-result');
+
             if (result) {
                 const resultData = this.baseElements[result];
                 const emoji = resultData ? resultData.emoji : '⭐';
-                preview.innerHTML = `<span class="fusion-emoji">${emoji}</span><span>${result}</span>`;
+                preview.innerHTML = `<div class="result-emoji">${emoji}</div><div class="result-name">${result}</div>`;
                 preview.classList.add('known');
             } else {
-                preview.innerHTML = `<i class="fas fa-question"></i><span>Unknown</span>`;
+                preview.innerHTML = `<div class="result-placeholder">❓</div>`;
                 preview.classList.remove('known');
             }
         }
@@ -547,12 +566,12 @@ class FusionBattlegrounds {
         
         if (result && this.baseElements[result]) {
             const newElement = this.createElement(result);
-            this.hand.push(newElement);
+            this.board.push(newElement); // Add result to board
             this.playSound('fusion');
             this.log(`Fused ${this.fusionSlots[0].name} + ${this.fusionSlots[1].name} = ${result}!`);
             this.showNotification(`Created ${result}!`, 'success');
         } else {
-            this.hand.push(this.fusionSlots[0], this.fusionSlots[1]);
+            this.board.push(this.fusionSlots[0], this.fusionSlots[1]); // Return to board
             this.log(`No fusion recipe for ${recipe}`);
             this.showNotification('Fusion failed!', 'error');
         }
@@ -563,8 +582,8 @@ class FusionBattlegrounds {
     }
     
     clearFusion() {
-        if (this.fusionSlots[0]) this.hand.push(this.fusionSlots[0]);
-        if (this.fusionSlots[1]) this.hand.push(this.fusionSlots[1]);
+        if (this.fusionSlots[0]) this.board.push(this.fusionSlots[0]);
+        if (this.fusionSlots[1]) this.board.push(this.fusionSlots[1]);
         this.fusionSlots = [null, null];
         this.updateDisplay();
         this.checkFusionReady();
@@ -684,7 +703,6 @@ class FusionBattlegrounds {
         this.gold = 3;
         this.turn = 1;
         this.health = 40;
-        this.hand = [];
         this.board = [];
         this.shop = [];
         this.fusionSlots = [null, null];
@@ -713,9 +731,8 @@ class FusionBattlegrounds {
         
         if (container === 'shop') {
             card.addEventListener('click', () => this.buyElement(element.id));
-        } else if (container === 'hand') {
-            card.addEventListener('click', () => this.playElement(element.id));
         }
+        // Remove hand-specific logic since we only have board now
         
         return card;
     }
@@ -760,7 +777,6 @@ class FusionBattlegrounds {
         document.getElementById('turn').textContent = this.turn;
         document.getElementById('health').textContent = this.health;
         document.getElementById('shop-tier').textContent = this.shopTier;
-        document.getElementById('hand-count').textContent = this.hand.length;
         document.getElementById('board-count').textContent = this.board.length;
         
         const healthPercentage = Math.max(0, (this.health / this.maxHealth) * 100);
@@ -786,13 +802,7 @@ class FusionBattlegrounds {
         this.shop.forEach(element => {
             shopContainer.appendChild(this.createElementCard(element, 'shop'));
         });
-        
-        const handContainer = document.getElementById('hand-elements');
-        handContainer.innerHTML = '';
-        this.hand.forEach(element => {
-            handContainer.appendChild(this.createElementCard(element, 'hand'));
-        });
-        
+
         const boardContainer = document.getElementById('board-elements');
         boardContainer.innerHTML = '';
         this.board.forEach(element => {
@@ -801,11 +811,13 @@ class FusionBattlegrounds {
         
         document.querySelectorAll('.fusion-slot').forEach((slot, index) => {
             if (this.fusionSlots[index]) {
-                slot.innerHTML = '';
-                slot.appendChild(this.createElementCard(this.fusionSlots[index], 'fusion'));
+                const element = this.fusionSlots[index];
+                const elementData = this.baseElements[element.name];
+                const emoji = elementData ? elementData.emoji : '❓';
+                slot.innerHTML = `<div class="slot-emoji">${emoji}</div>`;
                 slot.classList.add('filled');
             } else {
-                slot.innerHTML = `<div class="slot-content"><i class="fas fa-plus"></i><span>Drop Element ${index + 1}</span></div>`;
+                slot.innerHTML = `<div class="slot-placeholder">Drop Element</div>`;
                 slot.classList.remove('filled');
             }
         });

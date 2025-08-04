@@ -3,7 +3,7 @@ class AudioManager {
         this.sounds = {};
         this.musicEnabled = true;
         this.soundEnabled = true;
-        this.masterVolume = 0.7;
+        this.masterVolume = 0.1; // Much quieter
         this.loadSounds();
     }
     
@@ -29,8 +29,8 @@ class AudioManager {
         for (let i = 0; i < numSamples; i++) {
             const t = i / sampleRate;
             let sample = Math.sin(2 * Math.PI * frequency * t);
-            const envelope = Math.exp(-t * 3);
-            channelData[i] = sample * envelope * 0.3;
+            const envelope = Math.exp(-t * 5); // Faster decay
+            channelData[i] = sample * envelope * 0.1; // Much quieter
         }
         
         return buffer;
