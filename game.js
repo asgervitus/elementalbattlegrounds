@@ -11,6 +11,8 @@ class FusionBattlegrounds {
         this.alchemySlots = [null, null, null, null, null]; // 5 alchemy slots
         this.alchemyElements = []; // Track element types for coloring
         this.shopTier = 1;
+        this.sellMode = false; // For selling units
+        this.currentPage = 'game'; // 'game' or 'alchemy'
 
         this.initializeElements();
         this.initializeEventListeners();
@@ -353,8 +355,11 @@ class FusionBattlegrounds {
         document.getElementById('refresh-btn').addEventListener('click', () => this.refreshShop());
         document.getElementById('end-turn-btn').addEventListener('click', () => this.endTurn());
 
-        document.getElementById('clear-log-btn').addEventListener('click', () => this.clearLog());
+
         document.getElementById('extract-btn').addEventListener('click', () => this.extractAlchemyResult());
+        document.getElementById('alchemy-btn').addEventListener('click', () => this.openAlchemyPage());
+        document.getElementById('close-alchemy-btn').addEventListener('click', () => this.closeAlchemyPage());
+        document.getElementById('sell-mode-btn').addEventListener('click', () => this.toggleSellMode());
         document.getElementById('close-tutorial').addEventListener('click', () => this.hideTutorial());
         document.getElementById('close-settings').addEventListener('click', () => this.hideSettings());
         document.getElementById('continue-btn').addEventListener('click', () => this.continueToBattle());
@@ -822,6 +827,68 @@ class FusionBattlegrounds {
             }, 1500 + i * 100);
         }
     }
+
+    openAlchemyPage() {
+        this.currentPage = 'alchemy';
+        document.getElementById('game-interface').classList.add('hidden');
+        document.getElementById('alchemy-page').classList.remove('hidden');
+        this.updateAlchemyDisplay();
+        this.playSound('click');
+    }
+
+    closeAlchemyPage() {
+        this.currentPage = 'game';
+        document.getElementById('alchemy-page').classList.add('hidden');
+        document.getElementById('game-interface').classList.remove('hidden');
+        this.updateDisplay();
+        this.playSound('click');
+    }
+
+    toggleSellMode() {
+        this.sellMode = !this.sellMode;
+        const sellBtn = document.getElementById('sell-mode-btn');
+        const instruction = document.getElementById('army-instruction');
+
+        if (this.sellMode) {
+            sellBtn.textContent = '❌ Cancel Sell';
+            sellBtn.style.background = 'linear-gradient(135deg, #ff6b6b, #ee5a24)';
+            instruction.textContent = 'Click elements to sell them for 2 gold each';
+            instruction.classList.add('sell-mode');
+        } else {
+            sellBtn.textContent = '💰 Sell Mode';
+            sellBtn.style.background = '';
+            instruction.textContent = 'Click two elements to fuse them together';
+            instruction.classList.remove('sell-mode');
+        }
+
+        this.updateDisplay();
+        this.playSound('click');
+    }
+
+    sellElement(elementId) {
+        const element = this.board.find(e => e.id == elementId);
+        if (element) {
+            this.board = this.board.filter(e => e.id != elementId);
+            this.gold += 2; // Sell for 2 gold
+            this.updateDisplay();
+            this.playSound('buy');
+            this.log(`Sold ${element.name} for 2 gold`);
+            this.showNotification(`Sold ${element.name} for 2 gold`, 'success');
+        }
+    }
+
+    updateAlchemyDisplay() {
+        // Update army display in alchemy page
+        const alchemyBoardContainer = document.getElementById('alchemy-board-elements');
+        alchemyBoardContainer.innerHTML = '';
+        this.board.forEach(element => {
+            alchemyBoardContainer.appendChild(this.createElementCard(element, 'alchemy-board'));
+        });
+
+        // Update alchemy apparatus
+        this.updateAlchemyApparatus();
+        this.checkAlchemyReady();
+    }
     
     generateShop() {
         this.shop = [];
@@ -832,8 +899,8 @@ class FusionBattlegrounds {
             this.baseElements[name].tier <= this.shopTier
         );
 
-        // Generate 6 shop slots for more variety
-        for (let i = 0; i < 6; i++) {
+        // Generate only 3 shop slots
+        for (let i = 0; i < 3; i++) {
             const randomElement = availableElements[Math.floor(Math.random() * availableElements.length)];
             this.shop.push(this.createElement(randomElement));
         }
@@ -865,7 +932,7 @@ class FusionBattlegrounds {
         if (element && this.gold >= element.cost && this.board.length < 7) {
             this.gold -= element.cost;
             this.board.push(element); // Add directly to board
-            this.shop = this.shop.filter(e => e.id != elementId);
+            this.shop = this.shop.filter(e => e.id != elementId); // Remove from shop, don't replace
             this.updateDisplay();
             this.playSound('buy');
             this.log(`Bought ${element.name} for ${element.cost} gold`);
@@ -874,10 +941,7 @@ class FusionBattlegrounds {
     
 
     
-    clearLog() {
-        document.getElementById('log-content').innerHTML = '';
-        this.playSound('click');
-    }
+
     
     startNewTurn() {
         this.gold = Math.min(10, this.turn + 2);
@@ -1012,7 +1076,9 @@ class FusionBattlegrounds {
         this.selectedElements = [];
         this.alchemySlots = [null, null, null, null, null];
         this.alchemyElements = [];
-        this.clearLog();
+        this.sellMode = false;
+        this.currentPage = 'game';
+
     }
     
     createElementCard(element, container) {
@@ -1037,8 +1103,14 @@ class FusionBattlegrounds {
         
         if (container === 'shop') {
             card.addEventListener('click', () => this.buyElement(element.id));
-        } else if (container === 'board') {
-            card.addEventListener('click', () => this.selectElementForFusion(element.id));
+        } else if (container === 'board' || container === 'alchemy-board') {
+            card.addEventListener('click', () => {
+                if (this.sellMode) {
+                    this.sellElement(element.id);
+                } else {
+                    this.selectElementForFusion(element.id);
+                }
+            });
         }
         
         return card;
@@ -1113,7 +1185,11 @@ class FusionBattlegrounds {
         const boardContainer = document.getElementById('board-elements');
         boardContainer.innerHTML = '';
         this.board.forEach(element => {
-            boardContainer.appendChild(this.createElementCard(element, 'board'));
+            const card = this.createElementCard(element, 'board');
+            if (this.sellMode) {
+                card.classList.add('sell-mode');
+            }
+            boardContainer.appendChild(card);
         });
         
 

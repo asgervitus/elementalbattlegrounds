@@ -75,24 +75,42 @@
                 <div id="shop-section" class="game-panel">
                     <div class="panel-header">
                         <h3>🏪 Shop (Tier <span id="shop-tier">1</span>)</h3>
+                        <div class="shop-actions">
+                            <button id="alchemy-btn" class="action-btn">
+                                ⚗️ Alchemy Lab
+                            </button>
+                        </div>
                     </div>
-                    <div id="shop-elements" class="elements-grid"></div>
+                    <div id="shop-elements" class="elements-grid shop-grid"></div>
                 </div>
 
                 <!-- Your Army -->
-                <div id="board-section" class="game-panel">
+                <div id="board-section" class="game-panel army-panel">
                     <div class="panel-header">
                         <h3>⚔️ Your Army (<span id="board-count">0</span>/7) - Power: <span id="board-power">0</span></h3>
+                        <div class="army-actions">
+                            <button id="sell-mode-btn" class="action-btn">
+                                💰 Sell Mode
+                            </button>
+                        </div>
                     </div>
                     <div id="board-elements" class="elements-grid board-drop-zone"></div>
+                    <div class="army-instructions">
+                        <span id="army-instruction">Click two elements to fuse them together</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alchemy Laboratory Page -->
+            <div id="alchemy-page" class="hidden">
+                <div class="alchemy-header">
+                    <h2>⚗️ Alchemy Laboratory</h2>
+                    <button id="close-alchemy-btn" class="close-btn">✕ Back to Game</button>
                 </div>
 
-
-
-                <!-- Alchemy Laboratory -->
-                <div id="alchemy-section" class="game-panel">
-                    <div class="panel-header">
-                        <h3>⚗️ Alchemy Laboratory</h3>
+                <div class="alchemy-layout">
+                    <!-- Alchemy Apparatus -->
+                    <div class="alchemy-main">
                         <div class="alchemy-info">
                             <div class="alchemy-counter">
                                 <span id="alchemy-count">0</span>/5
@@ -103,56 +121,59 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="alchemy-area">
-                        <div class="alchemy-apparatus">
-                            <div class="alchemy-flask">
-                                <div class="flask-liquid" id="flask-liquid"></div>
-                                <div class="flask-bubbles">
-                                    <div class="bubble"></div>
-                                    <div class="bubble"></div>
-                                    <div class="bubble"></div>
+
+                        <div id="alchemy-area">
+                            <div class="alchemy-apparatus">
+                                <div class="alchemy-flask">
+                                    <div class="flask-liquid" id="flask-liquid"></div>
+                                    <div class="flask-bubbles">
+                                        <div class="bubble"></div>
+                                        <div class="bubble"></div>
+                                        <div class="bubble"></div>
+                                    </div>
+                                </div>
+                                <div class="alchemy-tubes">
+                                    <div class="tube tube-1"></div>
+                                    <div class="tube tube-2"></div>
+                                    <div class="tube tube-3"></div>
+                                </div>
+                                <div class="alchemy-base">
+                                    <div class="base-flame"></div>
                                 </div>
                             </div>
-                            <div class="alchemy-tubes">
-                                <div class="tube tube-1"></div>
-                                <div class="tube tube-2"></div>
-                                <div class="tube tube-3"></div>
+                            <div class="alchemy-slots">
+                                <div class="alchemy-slot" data-slot="0">
+                                    <div class="slot-number">1</div>
+                                </div>
+                                <div class="alchemy-slot" data-slot="1">
+                                    <div class="slot-number">2</div>
+                                </div>
+                                <div class="alchemy-slot" data-slot="2">
+                                    <div class="slot-number">3</div>
+                                </div>
+                                <div class="alchemy-slot" data-slot="3">
+                                    <div class="slot-number">4</div>
+                                </div>
+                                <div class="alchemy-slot" data-slot="4">
+                                    <div class="slot-number">5</div>
+                                </div>
                             </div>
-                            <div class="alchemy-base">
-                                <div class="base-flame"></div>
-                            </div>
+                            <button id="extract-btn" class="extract-btn" disabled>
+                                🧬 Extract Essence
+                            </button>
                         </div>
-                        <div class="alchemy-slots">
-                            <div class="alchemy-slot" data-slot="0">
-                                <div class="slot-number">1</div>
-                            </div>
-                            <div class="alchemy-slot" data-slot="1">
-                                <div class="slot-number">2</div>
-                            </div>
-                            <div class="alchemy-slot" data-slot="2">
-                                <div class="slot-number">3</div>
-                            </div>
-                            <div class="alchemy-slot" data-slot="3">
-                                <div class="slot-number">4</div>
-                            </div>
-                            <div class="alchemy-slot" data-slot="4">
-                                <div class="slot-number">5</div>
-                            </div>
-                        </div>
-                        <button id="extract-btn" class="extract-btn" disabled>
-                            🧬 Extract Essence
-                        </button>
                     </div>
-                </div>
 
-                <!-- Battle Log -->
-                <div id="log-section" class="game-panel log-panel">
-                    <div class="panel-header">
-                        <h3>📜 Battle Log</h3>
-                        <button id="clear-log-btn" class="clear-btn">🗑️</button>
+                    <!-- Army Display in Alchemy -->
+                    <div class="alchemy-army">
+                        <div class="panel-header">
+                            <h3>⚔️ Your Army</h3>
+                        </div>
+                        <div id="alchemy-board-elements" class="elements-grid"></div>
+                        <div class="alchemy-instructions">
+                            Drag elements from your army to the alchemy slots above to sacrifice them for a guaranteed Tier 5 legendary!
+                        </div>
                     </div>
-                    <div id="log-content" class="log-content"></div>
                 </div>
             </div>
         </div>
