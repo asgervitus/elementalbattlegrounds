@@ -20,8 +20,14 @@ class FusionBattlegrounds {
         this.initializeEventListeners();
         this.showLoadingScreen();
 
-        // Initialize multiplayer manager
-        this.multiplayer = new MultiplayerManager(this);
+        // Initialize multiplayer manager after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.multiplayer = new MultiplayerManager(this);
+            });
+        } else {
+            this.multiplayer = new MultiplayerManager(this);
+        }
     }
     
     showLoadingScreen() {

@@ -21,13 +21,19 @@ class MultiplayerManager {
     }
     
     addMultiplayerUI() {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.addMultiplayerUI());
+            return;
+        }
+
         // Add multiplayer button to main menu
         const mainMenu = document.querySelector('.menu-buttons');
         if (mainMenu && !document.getElementById('multiplayer-btn')) {
             const multiplayerBtn = document.createElement('button');
             multiplayerBtn.id = 'multiplayer-btn';
             multiplayerBtn.className = 'menu-btn';
-            multiplayerBtn.innerHTML = '🌐 Play Online';
+            multiplayerBtn.innerHTML = '<i class="fas fa-globe"></i> 🌐 Play Online';
             mainMenu.insertBefore(multiplayerBtn, mainMenu.children[1]);
         }
         
