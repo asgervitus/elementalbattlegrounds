@@ -30,107 +30,380 @@ class FusionBattlegrounds {
     initializeElements() {
         this.baseElements = {
             // Tier 1 - Basic Elements (All cost 3 gold)
-            'Fire': { attack: 3, health: 2, cost: 3, tier: 1, emoji: '🔥' },
-            'Water': { attack: 2, health: 3, cost: 3, tier: 1, emoji: '💧' },
-            'Earth': { attack: 2, health: 4, cost: 3, tier: 1, emoji: '🌍' },
-            'Air': { attack: 4, health: 1, cost: 3, tier: 1, emoji: '💨' },
-            'Gear': { attack: 3, health: 3, cost: 3, tier: 1, emoji: '⚙️' },
-            'Chip': { attack: 4, health: 2, cost: 3, tier: 1, emoji: '💾' },
+            'Fire': {
+                attack: 3, health: 2, cost: 3, tier: 1, emoji: '🔥',
+                passive: 'Ignite: Deals 1 damage to all enemies at start of battle'
+            },
+            'Water': {
+                attack: 2, health: 3, cost: 3, tier: 1, emoji: '💧',
+                passive: 'Healing Flow: Heals adjacent allies for 1 HP each turn'
+            },
+            'Earth': {
+                attack: 2, health: 4, cost: 3, tier: 1, emoji: '🌍',
+                passive: 'Fortify: Gains +1 health when another Earth element is played'
+            },
+            'Air': {
+                attack: 4, health: 1, cost: 3, tier: 1, emoji: '💨',
+                passive: 'Swift Strike: Attacks first in battle, ignoring enemy armor'
+            },
+            'Gear': {
+                attack: 3, health: 3, cost: 3, tier: 1, emoji: '⚙️',
+                passive: 'Mechanical Synergy: +1 attack for each Tech element in army'
+            },
+            'Chip': {
+                attack: 4, health: 2, cost: 3, tier: 1, emoji: '💾',
+                passive: 'Data Processing: Reveals enemy army composition before battle'
+            },
 
             // Tier 2 - Basic Fusions (All cost 3 gold)
-            'Lava': { attack: 6, health: 3, cost: 3, tier: 2, emoji: '🌋' },
-            'Steam': { attack: 3, health: 4, cost: 3, tier: 2, emoji: '♨️' },
-            'Magma': { attack: 5, health: 4, cost: 3, tier: 2, emoji: '🗻' },
-            'Smoke': { attack: 4, health: 3, cost: 3, tier: 2, emoji: '💨' },
-            'Tide': { attack: 4, health: 5, cost: 3, tier: 2, emoji: '🌊' },
-            'Mud': { attack: 3, health: 5, cost: 3, tier: 2, emoji: '🟫' },
-            'Mist': { attack: 3, health: 4, cost: 3, tier: 2, emoji: '🌫️' },
-            'Stone': { attack: 3, health: 7, cost: 3, tier: 2, emoji: '🪨' },
-            'Sandstorm': { attack: 5, health: 4, cost: 3, tier: 2, emoji: '🏜️' },
-            'Gale': { attack: 6, health: 2, cost: 3, tier: 2, emoji: '🌪️' },
-            'Android': { attack: 5, health: 5, cost: 3, tier: 2, emoji: '🤖' },
-            'Automaton': { attack: 4, health: 6, cost: 3, tier: 2, emoji: '🦾' },
-            'AI Core': { attack: 7, health: 3, cost: 3, tier: 2, emoji: '🧠' },
+            'Lava': {
+                attack: 6, health: 3, cost: 3, tier: 2, emoji: '🌋',
+                passive: 'Molten Armor: Reflects 2 damage back to attackers'
+            },
+            'Steam': {
+                attack: 3, health: 4, cost: 3, tier: 2, emoji: '♨️',
+                passive: 'Obscuring Mist: Reduces enemy accuracy by 25%'
+            },
+            'Magma': {
+                attack: 5, health: 4, cost: 3, tier: 2, emoji: '🗻',
+                passive: 'Eruption: When destroyed, deals 3 damage to random enemy'
+            },
+            'Smoke': {
+                attack: 4, health: 3, cost: 3, tier: 2, emoji: '💨',
+                passive: 'Choking Cloud: Reduces enemy attack by 1 for 2 turns'
+            },
+            'Tide': {
+                attack: 4, health: 5, cost: 3, tier: 2, emoji: '🌊',
+                passive: 'Tidal Force: Gains +2 attack when army has 5+ elements'
+            },
+            'Mud': {
+                attack: 3, health: 5, cost: 3, tier: 2, emoji: '🟫',
+                passive: 'Sticky Trap: Slows enemy attacks, they strike last'
+            },
+            'Mist': {
+                attack: 3, health: 4, cost: 3, tier: 2, emoji: '🌫️',
+                passive: 'Phantom Form: 50% chance to avoid physical attacks'
+            },
+            'Stone': {
+                attack: 3, health: 7, cost: 3, tier: 2, emoji: '🪨',
+                passive: 'Immovable: Cannot be targeted by single-target abilities'
+            },
+            'Sandstorm': {
+                attack: 5, health: 4, cost: 3, tier: 2, emoji: '🏜️',
+                passive: 'Blinding Sands: Reduces all enemy accuracy by 15%'
+            },
+            'Gale': {
+                attack: 6, health: 2, cost: 3, tier: 2, emoji: '🌪️',
+                passive: 'Wind Boost: Increases ally speed, they attack first'
+            },
+            'Android': {
+                attack: 5, health: 5, cost: 3, tier: 2, emoji: '🤖',
+                passive: 'Self-Repair: Heals 2 HP at the end of each turn'
+            },
+            'Automaton': {
+                attack: 4, health: 6, cost: 3, tier: 2, emoji: '🦾',
+                passive: 'Adaptive Learning: Gains +1 attack after each battle survived'
+            },
+            'AI Core': {
+                attack: 7, health: 3, cost: 3, tier: 2, emoji: '🧠',
+                passive: 'Tactical Analysis: Reveals optimal fusion combinations'
+            },
 
             // Tier 3 - Advanced Fusions (All cost 3 gold)
-            'Foundry': { attack: 8, health: 6, cost: 3, tier: 3, emoji: '🏭' },
-            'Geyser': { attack: 6, health: 7, cost: 3, tier: 3, emoji: '⛲' },
-            'Volcano': { attack: 9, health: 5, cost: 3, tier: 3, emoji: '🌋' },
-            'Pyroclastic Flow': { attack: 10, health: 4, cost: 3, tier: 3, emoji: '☄️' },
-            'Steam Engine': { attack: 7, health: 7, cost: 3, tier: 3, emoji: '🚂' },
-            'Distillery': { attack: 5, health: 8, cost: 3, tier: 3, emoji: '🥃' },
-            'Hot Spring': { attack: 4, health: 9, cost: 3, tier: 3, emoji: '♨️' },
-            'Cloud': { attack: 6, health: 6, cost: 3, tier: 3, emoji: '☁️' },
-            'Forge': { attack: 8, health: 7, cost: 3, tier: 3, emoji: '⚒️' },
-            'Geothermal Plant': { attack: 7, health: 8, cost: 3, tier: 3, emoji: '⚡' },
-            'Lava Field': { attack: 9, health: 6, cost: 3, tier: 3, emoji: '🌋' },
-            'Ash Cloud': { attack: 6, health: 7, cost: 3, tier: 3, emoji: '🌫️' },
-            'Plasma Torch': { attack: 12, health: 4, cost: 3, tier: 3, emoji: '🔥' },
-            'Thunderstorm': { attack: 8, health: 8, cost: 3, tier: 3, emoji: '⛈️' },
-            'Electromagnet': { attack: 7, health: 9, cost: 3, tier: 3, emoji: '🧲' },
-            'Static Storm': { attack: 10, health: 6, cost: 3, tier: 3, emoji: '🌩️' },
-            'Steamship': { attack: 6, health: 10, cost: 3, tier: 3, emoji: '🚢' },
-            'Ocean': { attack: 5, health: 12, cost: 3, tier: 3, emoji: '🌊' },
-            'Estuary': { attack: 7, health: 9, cost: 3, tier: 3, emoji: '🏞️' },
-            'Sea Breeze': { attack: 8, health: 7, cost: 3, tier: 3, emoji: '🌬️' },
-            'Brick Kiln': { attack: 6, health: 9, cost: 7, tier: 3, emoji: '🧱' },
-            'Clay Pottery': { attack: 5, health: 10, cost: 6, tier: 3, emoji: '🏺' },
-            'Clay': { attack: 4, health: 11, cost: 6, tier: 3, emoji: '🟫' },
-            'Dust Mound': { attack: 7, health: 8, cost: 7, tier: 3, emoji: '🏜️' },
-            'Sauna': { attack: 6, health: 8, cost: 7, tier: 3, emoji: '🧖' },
-            'Dew': { attack: 4, health: 9, cost: 6, tier: 3, emoji: '💧' },
-            'Morning Fog': { attack: 5, health: 8, cost: 6, tier: 3, emoji: '🌁' },
-            'Vapor Cloud': { attack: 6, health: 7, cost: 6, tier: 3, emoji: '🌫️' },
-            'Glass': { attack: 8, health: 6, cost: 7, tier: 3, emoji: '🔮' },
-            'Marble': { attack: 6, health: 10, cost: 7, tier: 3, emoji: '🎱' },
-            'Boulder': { attack: 5, health: 12, cost: 7, tier: 3, emoji: '🪨' },
-            'Sandstone': { attack: 7, health: 9, cost: 7, tier: 3, emoji: '🏖️' },
-            'Ember Ash': { attack: 9, health: 5, cost: 7, tier: 3, emoji: '🔥' },
-            'Silt': { attack: 4, health: 10, cost: 6, tier: 3, emoji: '🟫' },
-            'Sand': { attack: 6, health: 8, cost: 6, tier: 3, emoji: '🏖️' },
-            'Dust Devil': { attack: 8, health: 6, cost: 7, tier: 3, emoji: '🌪️' },
-            'Fire Whirl': { attack: 11, health: 5, cost: 8, tier: 3, emoji: '🌪️🔥' },
-            'Sea Spray': { attack: 7, health: 7, cost: 7, tier: 3, emoji: '💦' },
-            'Dust Storm': { attack: 9, health: 6, cost: 8, tier: 3, emoji: '🌪️💨' },
-            'Tornado': { attack: 12, health: 4, cost: 8, tier: 3, emoji: '🌪️' },
-            'Robot Arm': { attack: 8, health: 8, cost: 8, tier: 3, emoji: '🦾' },
-            'Drone': { attack: 9, health: 6, cost: 8, tier: 3, emoji: '🚁' },
-            'Gearbox': { attack: 7, health: 9, cost: 8, tier: 3, emoji: '⚙️' },
-            'Smartwatch': { attack: 6, health: 8, cost: 7, tier: 3, emoji: '⌚' },
-            'Mechatronics': { attack: 10, health: 7, cost: 9, tier: 3, emoji: '🤖⚙️' },
-            'Microprocessor': { attack: 11, health: 5, cost: 8, tier: 3, emoji: '💻' },
+            'Foundry': {
+                attack: 8, health: 6, cost: 3, tier: 3, emoji: '🏭',
+                passive: 'Mass Production: Creates a random Tier 1 element every 3 turns'
+            },
+            'Geyser': {
+                attack: 6, health: 7, cost: 3, tier: 3, emoji: '⛲',
+                passive: 'Pressure Burst: Deals double damage every 4th attack'
+            },
+            'Volcano': {
+                attack: 9, health: 5, cost: 3, tier: 3, emoji: '🌋',
+                passive: 'Volcanic Ash: Reduces enemy vision, -2 accuracy to all enemies'
+            },
+            'Pyroclastic Flow': {
+                attack: 10, health: 4, cost: 3, tier: 3, emoji: '☄️',
+                passive: 'Devastating Rush: Deals splash damage to 2 additional enemies'
+            },
+            'Steam Engine': {
+                attack: 7, health: 7, cost: 3, tier: 3, emoji: '🚂',
+                passive: 'Momentum: Gains +1 attack each turn, resets when damaged'
+            },
+            'Distillery': {
+                attack: 5, health: 8, cost: 3, tier: 3, emoji: '🥃',
+                passive: 'Purification: Cleanses all debuffs from allies each turn'
+            },
+            'Hot Spring': {
+                attack: 4, health: 9, cost: 3, tier: 3, emoji: '♨️',
+                passive: 'Rejuvenation: All allies regenerate 1 HP per turn'
+            },
+            'Cloud': {
+                attack: 6, health: 6, cost: 3, tier: 3, emoji: '☁️',
+                passive: 'Lightning Rod: 25% chance to strike random enemy for 4 damage'
+            },
+            'Forge': {
+                attack: 8, health: 7, cost: 3, tier: 3, emoji: '⚒️',
+                passive: 'Weapon Crafting: Grants +2 attack to a random ally each turn'
+            },
+            'Geothermal Plant': {
+                attack: 7, health: 8, cost: 3, tier: 3, emoji: '⚡',
+                passive: 'Energy Surge: Doubles the effect of all ally passives for 1 turn'
+            },
+            'Lava Field': {
+                attack: 9, health: 6, cost: 3, tier: 3, emoji: '🌋',
+                passive: 'Scorched Earth: Enemies take 1 damage when entering battle'
+            },
+            'Ash Cloud': {
+                attack: 6, health: 7, cost: 3, tier: 3, emoji: '🌫️',
+                passive: 'Toxic Atmosphere: Poisons all enemies for 2 damage per turn'
+            },
+            'Plasma Torch': {
+                attack: 12, health: 4, cost: 3, tier: 3, emoji: '🔥',
+                passive: 'Plasma Burn: Ignores armor and shields, pure damage'
+            },
+            'Thunderstorm': {
+                attack: 8, health: 8, cost: 3, tier: 3, emoji: '⛈️',
+                passive: 'Chain Lightning: Each attack has 30% chance to hit 2 more enemies'
+            },
+            'Electromagnet': {
+                attack: 7, health: 9, cost: 3, tier: 3, emoji: '🧲',
+                passive: 'Magnetic Field: Pulls enemy projectiles, reducing ranged damage by 50%'
+            },
+            'Static Storm': {
+                attack: 10, health: 6, cost: 3, tier: 3, emoji: '🌩️',
+                passive: 'Overcharge: Stuns enemy for 1 turn when dealing critical damage'
+            },
+            'Steamship': {
+                attack: 6, health: 10, cost: 3, tier: 3, emoji: '🚢',
+                passive: 'Naval Superiority: +3 attack when fighting near Water elements'
+            },
+            'Ocean': {
+                attack: 5, health: 12, cost: 3, tier: 3, emoji: '🌊',
+                passive: 'Tidal Waves: Heals all Water allies for 2 HP when taking damage'
+            },
+            'Estuary': {
+                attack: 7, health: 9, cost: 3, tier: 3, emoji: '🏞️',
+                passive: 'Ecosystem: Provides +1 health to all allies permanently'
+            },
+            'Sea Breeze': {
+                attack: 8, health: 7, cost: 3, tier: 3, emoji: '🌬️',
+                passive: 'Refreshing Wind: Removes 1 debuff from all allies each turn'
+            },
+            'Brick Kiln': {
+                attack: 6, health: 9, cost: 3, tier: 3, emoji: '🧱',
+                passive: 'Hardened Structure: Gains +1 defense for each turn survived'
+            },
+            'Clay Pottery': {
+                attack: 5, health: 10, cost: 3, tier: 3, emoji: '🏺',
+                passive: 'Ancient Wisdom: Stores knowledge, grants +1 XP to all allies'
+            },
+            'Clay': {
+                attack: 4, health: 11, cost: 3, tier: 3, emoji: '🟫',
+                passive: 'Moldable Form: Can copy the passive of any adjacent ally'
+            },
+            'Dust Mound': {
+                attack: 7, health: 8, cost: 3, tier: 3, emoji: '🏜️',
+                passive: 'Erosion: Gradually reduces enemy armor by 1 each turn'
+            },
+            'Sauna': {
+                attack: 6, health: 8, cost: 3, tier: 3, emoji: '🧖',
+                passive: 'Relaxation: Removes all stress debuffs and grants +2 morale'
+            },
+            'Dew': {
+                attack: 4, health: 9, cost: 3, tier: 3, emoji: '💧',
+                passive: 'Morning Refresh: Restores 1 mana to all allies at dawn'
+            },
+            'Morning Fog': {
+                attack: 5, health: 8, cost: 3, tier: 3, emoji: '🌁',
+                passive: 'Concealment: Grants stealth to all allies for first turn'
+            },
+            'Vapor Cloud': {
+                attack: 6, health: 7, cost: 3, tier: 3, emoji: '🌫️',
+                passive: 'Gaseous Form: Can pass through enemies to attack backline'
+            },
+            'Glass': {
+                attack: 8, health: 6, cost: 3, tier: 3, emoji: '🔮',
+                passive: 'Fragile Power: +4 attack but takes double damage from physical attacks'
+            },
+            'Marble': {
+                attack: 6, health: 10, cost: 3, tier: 3, emoji: '🎱',
+                passive: 'Artistic Inspiration: Boosts all ally abilities by 25%'
+            },
+            'Boulder': {
+                attack: 5, health: 12, cost: 3, tier: 3, emoji: '🪨',
+                passive: 'Avalanche: When destroyed, deals damage equal to remaining health'
+            },
+            'Sandstone': {
+                attack: 7, health: 9, cost: 3, tier: 3, emoji: '🏖️',
+                passive: 'Time Erosion: Ages enemies, reducing their max health by 1 per turn'
+            },
+            'Ember Ash': {
+                attack: 9, health: 5, cost: 3, tier: 3, emoji: '🔥',
+                passive: 'Smoldering: Continues burning enemies for 2 turns after death'
+            },
+            'Silt': {
+                attack: 4, health: 10, cost: 3, tier: 3, emoji: '🟫',
+                passive: 'Fertile Ground: Spawns a Tier 1 element when reaching 0 health'
+            },
+            'Sand': {
+                attack: 6, health: 8, cost: 3, tier: 3, emoji: '🏖️',
+                passive: 'Shifting Sands: Randomly teleports around battlefield, hard to hit'
+            },
+            'Dust Devil': {
+                attack: 8, health: 6, cost: 3, tier: 3, emoji: '🌪️',
+                passive: 'Whirlwind: Attacks all enemies in a spinning motion'
+            },
+            'Fire Whirl': {
+                attack: 11, health: 5, cost: 3, tier: 3, emoji: '🌪️🔥',
+                passive: 'Burning Vortex: Pulls enemies in and burns them for 3 damage per turn'
+            },
+            'Sea Spray': {
+                attack: 7, health: 7, cost: 3, tier: 3, emoji: '💦',
+                passive: 'Salt Corrosion: Reduces enemy weapon effectiveness by 2 each turn'
+            },
+            'Dust Storm': {
+                attack: 9, health: 6, cost: 3, tier: 3, emoji: '🌪️💨',
+                passive: 'Blinding Fury: Causes all enemies to miss their next attack'
+            },
+            'Tornado': {
+                attack: 12, health: 4, cost: 3, tier: 3, emoji: '🌪️',
+                passive: 'Devastating Winds: Destroys enemy projectiles and barriers'
+            },
+            'Robot Arm': {
+                attack: 8, health: 8, cost: 3, tier: 3, emoji: '🦾',
+                passive: 'Precision Strike: Critical hits have 100% accuracy and +5 damage'
+            },
+            'Drone': {
+                attack: 9, health: 6, cost: 3, tier: 3, emoji: '🚁',
+                passive: 'Aerial Reconnaissance: Reveals enemy weaknesses, +3 damage to weak spots'
+            },
+            'Gearbox': {
+                attack: 7, health: 9, cost: 3, tier: 3, emoji: '⚙️',
+                passive: 'Gear Ratio: Converts speed into power, +1 attack per turn'
+            },
+            'Smartwatch': {
+                attack: 6, health: 8, cost: 3, tier: 3, emoji: '⌚',
+                passive: 'Time Management: Grants extra turn every 5 rounds'
+            },
+            'Mechatronics': {
+                attack: 10, health: 7, cost: 3, tier: 3, emoji: '🤖⚙️',
+                passive: 'Hybrid Systems: Combines all Tech passives in simplified form'
+            },
+            'Microprocessor': {
+                attack: 11, health: 5, cost: 3, tier: 3, emoji: '💻',
+                passive: 'Overclocking: Doubles attack speed but takes 1 damage per turn'
+            },
 
             // Tier 4 - Master Fusions (All cost 3 gold)
-            'Inferno': { attack: 15, health: 8, cost: 3, tier: 4, emoji: '🔥🌋' },
-            'Tsunami': { attack: 12, health: 12, cost: 3, tier: 4, emoji: '🌊🌪️' },
-            'Earthquake': { attack: 10, health: 15, cost: 3, tier: 4, emoji: '🌍💥' },
-            'Hurricane': { attack: 14, health: 9, cost: 3, tier: 4, emoji: '🌪️⛈️' },
-            'Cybernetics': { attack: 13, health: 11, cost: 3, tier: 4, emoji: '🤖🧠' },
-            'Quantum Core': { attack: 16, health: 7, cost: 3, tier: 4, emoji: '⚛️💎' },
-            'Plasma Storm': { attack: 18, health: 6, cost: 3, tier: 4, emoji: '⚡🌩️' },
-            'Tidal Wave': { attack: 14, health: 10, cost: 3, tier: 4, emoji: '🌊💥' },
-            'Molten Core': { attack: 16, health: 9, cost: 3, tier: 4, emoji: '🌋🔥' },
-            'Lightning Storm': { attack: 17, health: 7, cost: 3, tier: 4, emoji: '⚡⛈️' },
-            'Crystal Formation': { attack: 11, health: 14, cost: 3, tier: 4, emoji: '💎🔮' },
-            'Mechanical Beast': { attack: 15, health: 10, cost: 3, tier: 4, emoji: '🤖🦾' },
+            'Inferno': {
+                attack: 15, health: 8, cost: 3, tier: 4, emoji: '🔥🌋',
+                passive: 'Hellfire: Burns all enemies for 3 damage per turn, spreads on death'
+            },
+            'Tsunami': {
+                attack: 12, health: 12, cost: 3, tier: 4, emoji: '🌊🌪️',
+                passive: 'Overwhelming Force: Pushes enemies back, preventing counterattacks'
+            },
+            'Earthquake': {
+                attack: 10, health: 15, cost: 3, tier: 4, emoji: '🌍💥',
+                passive: 'Seismic Shock: Stuns all enemies for 1 turn when entering battle'
+            },
+            'Hurricane': {
+                attack: 14, health: 9, cost: 3, tier: 4, emoji: '🌪️⛈️',
+                passive: 'Eye of Storm: Immune to all debuffs, grants immunity to allies'
+            },
+            'Cybernetics': {
+                attack: 13, health: 11, cost: 3, tier: 4, emoji: '🤖🧠',
+                passive: 'Neural Network: Shares damage taken equally among all Tech allies'
+            },
+            'Quantum Core': {
+                attack: 16, health: 7, cost: 3, tier: 4, emoji: '⚛️💎',
+                passive: 'Quantum Entanglement: When attacked, teleports damage to random enemy'
+            },
+            'Plasma Storm': {
+                attack: 18, health: 6, cost: 3, tier: 4, emoji: '⚡🌩️',
+                passive: 'Ionic Discharge: Each attack charges up, every 3rd attack hits all enemies'
+            },
+            'Tidal Wave': {
+                attack: 14, health: 10, cost: 3, tier: 4, emoji: '🌊💥',
+                passive: 'Crushing Depths: Deals bonus damage equal to enemy missing health'
+            },
+            'Molten Core': {
+                attack: 16, health: 9, cost: 3, tier: 4, emoji: '🌋🔥',
+                passive: 'Nuclear Fusion: Explodes when destroyed, dealing 8 damage to all enemies'
+            },
+            'Lightning Storm': {
+                attack: 17, health: 7, cost: 3, tier: 4, emoji: '⚡⛈️',
+                passive: 'Thunderous Roar: Intimidates enemies, reducing their attack by 3'
+            },
+            'Crystal Formation': {
+                attack: 11, health: 14, cost: 3, tier: 4, emoji: '💎🔮',
+                passive: 'Prismatic Shield: Reflects 50% of magic damage back to caster'
+            },
+            'Mechanical Beast': {
+                attack: 15, health: 10, cost: 3, tier: 4, emoji: '🤖🦾',
+                passive: 'Rampage Protocol: Gains +2 attack for each enemy destroyed this battle'
+            },
 
             // Tier 5 - Legendary Fusions (All cost 3 gold)
-            'Phoenix': { attack: 20, health: 12, cost: 3, tier: 5, emoji: '🔥🦅' },
-            'Leviathan': { attack: 18, health: 15, cost: 3, tier: 5, emoji: '🌊🐉' },
-            'Titan': { attack: 16, health: 18, cost: 3, tier: 5, emoji: '🌍⛰️' },
-            'Tempest Lord': { attack: 22, health: 10, cost: 3, tier: 5, emoji: '🌪️👑' },
-            'Cyber Dragon': { attack: 19, health: 14, cost: 3, tier: 5, emoji: '🤖🐉' },
-            'Quantum Beast': { attack: 24, health: 8, cost: 3, tier: 5, emoji: '⚛️🦾' },
-            'Elemental Avatar': { attack: 20, health: 15, cost: 3, tier: 5, emoji: '🌟👤' },
-            'Storm King': { attack: 23, health: 11, cost: 3, tier: 5, emoji: '⚡👑' },
+            'Phoenix': {
+                attack: 20, health: 12, cost: 3, tier: 5, emoji: '🔥🦅',
+                passive: 'Rebirth: When destroyed, revives with 50% health and +5 attack'
+            },
+            'Leviathan': {
+                attack: 18, health: 15, cost: 3, tier: 5, emoji: '🌊🐉',
+                passive: 'Ancient Wisdom: Grants all allies +2 attack and immunity to fear'
+            },
+            'Titan': {
+                attack: 16, health: 18, cost: 3, tier: 5, emoji: '🌍⛰️',
+                passive: 'Colossal Presence: Reduces all incoming damage by 3, minimum 1'
+            },
+            'Tempest Lord': {
+                attack: 22, health: 10, cost: 3, tier: 5, emoji: '🌪️👑',
+                passive: 'Storm Command: Controls weather, all attacks become lightning (ignore armor)'
+            },
+            'Cyber Dragon': {
+                attack: 19, health: 14, cost: 3, tier: 5, emoji: '🤖🐉',
+                passive: 'Digital Evolution: Upgrades a random ally to next tier each turn'
+            },
+            'Quantum Beast': {
+                attack: 24, health: 8, cost: 3, tier: 5, emoji: '⚛️🦾',
+                passive: 'Probability Manipulation: 40% chance to negate any attack against allies'
+            },
+            'Elemental Avatar': {
+                attack: 20, health: 15, cost: 3, tier: 5, emoji: '🌟👤',
+                passive: 'Elemental Mastery: Gains the passive abilities of all elements in army'
+            },
+            'Storm King': {
+                attack: 23, health: 11, cost: 3, tier: 5, emoji: '⚡👑',
+                passive: 'Divine Lightning: Each attack has 50% chance to instantly destroy enemy'
+            },
 
             // Tier 6 - Ultimate Fusions (All cost 3 gold)
-            'Primordial Force': { attack: 30, health: 20, cost: 3, tier: 6, emoji: '🌌💫' },
-            'World Ender': { attack: 35, health: 15, cost: 3, tier: 6, emoji: '💀🌍' },
-            'Genesis Core': { attack: 25, health: 25, cost: 3, tier: 6, emoji: '⭐🌟' },
-            'Omega Protocol': { attack: 40, health: 10, cost: 3, tier: 6, emoji: '🤖👑' },
-            'Cosmic Entity': { attack: 32, health: 18, cost: 3, tier: 6, emoji: '🌌👁️' },
-            'Reality Shaper': { attack: 28, health: 22, cost: 3, tier: 6, emoji: '🔮🌟' }
+            'Primordial Force': {
+                attack: 30, health: 20, cost: 3, tier: 6, emoji: '🌌💫',
+                passive: 'Creation Genesis: Resurrects all destroyed allies with full health each turn'
+            },
+            'World Ender': {
+                attack: 35, health: 15, cost: 3, tier: 6, emoji: '💀🌍',
+                passive: 'Apocalypse: Each attack permanently reduces enemy max health by 2'
+            },
+            'Genesis Core': {
+                attack: 25, health: 25, cost: 3, tier: 6, emoji: '⭐🌟',
+                passive: 'Reality Rewrite: Can change any ally into any other element once per turn'
+            },
+            'Omega Protocol': {
+                attack: 40, health: 10, cost: 3, tier: 6, emoji: '🤖👑',
+                passive: 'System Override: Takes control of enemy element for 2 turns'
+            },
+            'Cosmic Entity': {
+                attack: 32, health: 18, cost: 3, tier: 6, emoji: '🌌👁️',
+                passive: 'Omnipresence: Exists in all dimensions, cannot be targeted or damaged'
+            },
+            'Reality Shaper': {
+                attack: 28, health: 22, cost: 3, tier: 6, emoji: '🔮🌟',
+                passive: 'Divine Intervention: Rewrites battle rules, wins automatically after 3 turns'
+            }
         };
         
         // Generate complete fusion matrix - every element can fuse with every other element
@@ -1090,6 +1363,10 @@ class FusionBattlegrounds {
         const elementData = this.baseElements[element.name];
         const emoji = elementData ? elementData.emoji : '❓';
 
+        const passive = elementData ? elementData.passive : 'No passive ability';
+        const passiveTitle = passive.split(':')[0];
+        const passiveDescription = passive.split(':')[1] || '';
+
         card.innerHTML = `
             <div class="element-cost">${element.cost}</div>
             <div class="element-tier">T${element.tier}</div>
@@ -1098,6 +1375,9 @@ class FusionBattlegrounds {
             <div class="element-stats">
                 <div class="element-attack">${element.attack} ATK</div>
                 <div class="element-health">${element.health} HP</div>
+            </div>
+            <div class="element-passive" title="${passive}">
+                💫 ${passiveTitle}
             </div>
         `;
         
