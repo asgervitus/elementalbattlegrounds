@@ -13,10 +13,15 @@ class FusionBattlegrounds {
         this.shopTier = 1;
         this.sellMode = false; // For selling units
         this.currentPage = 'game'; // 'game' or 'alchemy'
+        this.gameMode = 'singleplayer'; // 'singleplayer' or 'multiplayer'
+        this.opponentData = null; // Store opponent's game state
 
         this.initializeElements();
         this.initializeEventListeners();
         this.showLoadingScreen();
+
+        // Initialize multiplayer manager
+        this.multiplayer = new MultiplayerManager(this);
     }
     
     showLoadingScreen() {
@@ -651,6 +656,125 @@ class FusionBattlegrounds {
         this.playSound('click');
         this.showNotification('Game Started!', 'success');
     }
+
+    startMultiplayerGame() {
+        this.gameMode = 'multiplayer';
+        this.gameState = 'playing';
+        document.getElementById('main-menu').classList.add('hidden');
+        document.getElementById('game-interface').classList.remove('hidden');
+
+        this.startNewTurn();
+        this.playSound('click');
+        this.showNotification('Multiplayer match started!', 'success');
+    }
+
+    startPvPBattle(opponentArmy, opponentName) {
+        document.getElementById('game-interface').classList.add('hidden');
+        document.getElementById('battle-screen').classList.remove('hidden');
+
+        // Calculate powers
+        const playerPower = this.board.reduce((sum, el) => sum + el.attack + el.health, 0);
+        const enemyPower = opponentArmy.reduce((sum, el) => sum + el.attack + el.health, 0);
+
+        // Display armies
+        this.displayPvPBattle(opponentArmy, opponentName);
+
+        document.getElementById('battle-player-power').textContent = playerPower;
+        document.getElementById('battle-enemy-power').textContent = enemyPower;
+
+        this.log(`PvP Battle vs ${opponentName}! Your power: ${playerPower} vs Their power: ${enemyPower}`);
+
+        // Simulate battle with passive abilities
+        setTimeout(() => {
+            this.resolvePvPBattle(playerPower, enemyPower, opponentName);
+        }, 3000);
+    }
+
+    displayPvPBattle(opponentArmy, opponentName) {
+        // Update battle screen for PvP
+        const battleTitle = document.querySelector('#battle-screen h2');
+        if (battleTitle) {
+            battleTitle.textContent = `Battle vs ${opponentName}`;
+        }
+
+        // Display player army
+        const playerBattleBoard = document.getElementById('battle-player-board');
+        playerBattleBoard.innerHTML = '';
+        this.board.forEach(element => {
+            playerBattleBoard.appendChild(this.createElementCard(element, 'battle'));
+        });
+
+        // Display opponent army
+        const enemyBattleBoard = document.getElementById('battle-enemy-board');
+        enemyBattleBoard.innerHTML = '';
+        opponentArmy.forEach(element => {
+            enemyBattleBoard.appendChild(this.createElementCard(element, 'battle'));
+        });
+
+        // Update army labels
+        const playerSide = document.querySelector('.player-side h3');
+        const enemySide = document.querySelector('.enemy-side h3');
+        if (playerSide) playerSide.textContent = 'Your Army';
+        if (enemySide) enemySide.textContent = `${opponentName}'s Army`;
+    }
+
+    resolvePvPBattle(playerPower, enemyPower, opponentName) {
+        const battleResult = document.getElementById('battle-result');
+
+        // Apply passive abilities (simplified for now)
+        const modifiedPlayerPower = this.calculatePowerWithPassives(this.board);
+        const modifiedEnemyPower = enemyPower; // Opponent passives would be calculated on their end
+
+        if (modifiedPlayerPower >= modifiedEnemyPower) {
+            battleResult.textContent = `Victory vs ${opponentName}!`;
+            battleResult.className = 'battle-result victory';
+            this.playSound('victory');
+            this.log(`Victory! You defeated ${opponentName}!`);
+        } else {
+            const damage = Math.ceil((modifiedEnemyPower - modifiedPlayerPower) / 3);
+            this.health = Math.max(0, this.health - damage);
+            battleResult.textContent = `Defeat vs ${opponentName}! You took ${damage} damage.`;
+            battleResult.className = 'battle-result defeat';
+            this.playSound('defeat');
+            this.log(`Defeat! ${opponentName} dealt ${damage} damage. Health: ${this.health}`);
+
+            if (this.health <= 0) {
+                battleResult.textContent += ' Game Over!';
+                this.gameState = 'gameOver';
+                this.log('Game Over! Your health reached 0.');
+            }
+        }
+
+        document.getElementById('continue-btn').classList.remove('hidden');
+    }
+
+    calculatePowerWithPassives(army) {
+        let totalPower = army.reduce((sum, el) => sum + el.attack + el.health, 0);
+
+        // Apply some basic passive effects for demonstration
+        army.forEach(element => {
+            const elementData = this.baseElements[element.name];
+            if (elementData && elementData.passive) {
+                // Simple passive power calculations
+                if (elementData.passive.includes('Synergy')) {
+                    const techCount = army.filter(e =>
+                        this.baseElements[e.name] &&
+                        (e.name.includes('Gear') || e.name.includes('Chip') || e.name.includes('Android'))
+                    ).length;
+                    totalPower += techCount;
+                }
+
+                if (elementData.passive.includes('Fortify')) {
+                    const earthCount = army.filter(e => e.name === 'Earth').length;
+                    totalPower += earthCount;
+                }
+
+                // Add more passive calculations as needed
+            }
+        });
+
+        return totalPower;
+    }
     
     showTutorial() {
         document.getElementById('tutorial-modal').classList.remove('hidden');
@@ -1043,6 +1167,12 @@ class FusionBattlegrounds {
 
             // Add fusion particle effect
             this.createFusionParticles();
+
+            // Broadcast to multiplayer
+            if (this.multiplayer && this.multiplayer.isMultiplayer()) {
+                this.multiplayer.broadcastFuseElements(element1.name, element2.name, result);
+                this.multiplayer.syncGameState();
+            }
         } else {
             // Fusion failed
             this.selectedElements = [];
@@ -1147,6 +1277,12 @@ class FusionBattlegrounds {
             this.playSound('buy');
             this.log(`Sold ${element.name} for 2 gold`);
             this.showNotification(`Sold ${element.name} for 2 gold`, 'success');
+
+            // Broadcast to multiplayer
+            if (this.multiplayer && this.multiplayer.isMultiplayer()) {
+                this.multiplayer.broadcastSellElement(element.name);
+                this.multiplayer.syncGameState();
+            }
         }
     }
 
@@ -1209,6 +1345,12 @@ class FusionBattlegrounds {
             this.updateDisplay();
             this.playSound('buy');
             this.log(`Bought ${element.name} for ${element.cost} gold`);
+
+            // Broadcast to multiplayer
+            if (this.multiplayer && this.multiplayer.isMultiplayer()) {
+                this.multiplayer.broadcastBuyElement(element.name);
+                this.multiplayer.syncGameState();
+            }
         }
     }
     
@@ -1227,7 +1369,25 @@ class FusionBattlegrounds {
         // Clear drained elements from alchemy
         this.clearDrainedElements();
 
-        this.showBattleScreen();
+        // Handle multiplayer vs singleplayer
+        if (this.multiplayer && this.multiplayer.isMultiplayer()) {
+            this.multiplayer.broadcastEndTurn();
+            this.waitForOpponentReady();
+        } else {
+            this.showBattleScreen();
+        }
+    }
+
+    waitForOpponentReady() {
+        // Show waiting screen
+        this.showNotification('Waiting for opponent to finish their turn...', 'info');
+
+        // In a real implementation, this would wait for the opponent
+        // For demo purposes, simulate opponent finishing after 3 seconds
+        setTimeout(() => {
+            const simulatedOpponentArmy = this.generateEnemyArmy();
+            this.multiplayer.startPvPBattle(simulatedOpponentArmy);
+        }, 3000);
     }
 
     clearDrainedElements() {
